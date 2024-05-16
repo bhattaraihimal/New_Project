@@ -1,7 +1,7 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('./database'); 
+import { DataTypes } from "sequelize";
+import { User } from "../model.js";
 
-const Information = sequelize.define('Information', {
+const informationSchema = {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -38,16 +38,18 @@ const Information = sequelize.define('Information', {
     allowNull: false,
     defaultValue: true, 
   },
-  user_id: {
+  user_id: { 
     type: DataTypes.INTEGER,
-    allowNull: false,
     references: {
-      model: 'User', 
+      model: (async () => {
+        const { User } = await import('../model.js');
+        return User;
+      })(), 
       key: 'id',
     },
   },
-});
+};
 
-Information.belongsTo(User);
+//Information.belongsTo(User);
 
-module.exports = Information;
+export default informationSchema;

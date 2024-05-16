@@ -1,7 +1,7 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('./database'); 
+import { DataTypes } from "sequelize";
+import { User } from "../model.js";
 
-const Ads = sequelize.define('Ads', {
+const noticeSchema = {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -9,10 +9,6 @@ const Ads = sequelize.define('Ads', {
     primaryKey: true,
   },
   title: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  imageUrl: {
     type: DataTypes.STRING,
     allowNull: false,
   },
@@ -26,17 +22,18 @@ const Ads = sequelize.define('Ads', {
     allowNull: false,
     defaultValue: true, 
   },
-  user_id: {
+  user_id: { 
     type: DataTypes.INTEGER,
-    allowNull: false,
     references: {
-      model: 'User', 
+      model: (async () => {
+        const { User } = await import('../model.js');
+        return User;
+      })(), 
       key: 'id',
     },
   },
-});
+};
 
-Ads.belongsTo(User);
+//Notice.belongsTo(User);
 
-
-module.exports = Ads;
+export default noticeSchema;

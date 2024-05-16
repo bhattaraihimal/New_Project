@@ -1,7 +1,6 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('./database'); 
+import { DataTypes } from "sequelize";
 
-const Role = sequelize.define('Role', {
+const roleSchema = {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -17,8 +16,7 @@ const Role = sequelize.define('Role', {
     allowNull: false,
     defaultValue: true, 
   },
-});
+};
 
-Role.hasMany(RolePermission);
 
-module.exports = Role;
+export default roleSchema;

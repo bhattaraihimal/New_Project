@@ -1,7 +1,8 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('./database'); 
+import { DataTypes } from "sequelize";
+import { User } from "../model.js";
 
-const Employee = sequelize.define('Employee', {
+
+const employeeSchema = {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -28,17 +29,19 @@ const Employee = sequelize.define('Employee', {
     type: DataTypes.STRING, 
     allowNull: true, 
   },
-  user_id: {
+  user_id: { 
     type: DataTypes.INTEGER,
-    allowNull: false,
     references: {
-      model: 'User', 
+      model: (async () => {
+        const { User } = await import('../model.js');
+        return User;
+      })(), 
       key: 'id',
     },
   },
-});
+};
 
-Employee.belongsTo(User);
+//Employee.belongsTo(User);
 
 
-module.exports = Employee;
+export default employeeSchema;

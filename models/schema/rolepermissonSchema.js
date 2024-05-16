@@ -1,18 +1,20 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('./database'); 
+import { DataTypes } from "sequelize";
+import { Role } from "../model.js";
 
-const RolePermission = sequelize.define('RolePermission', {
+const rolePermissionSchema = {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
     allowNull: false,
     primaryKey: true,
   },
-  role_id: {
+  role_id: { 
     type: DataTypes.INTEGER,
-    allowNull: false,
     references: {
-      model: 'Role', 
+      model: (async () => {
+        const { Role } = await import('../model.js');
+        return Role;
+      })(), 
       key: 'id',
     },
   },
@@ -36,8 +38,8 @@ const RolePermission = sequelize.define('RolePermission', {
     allowNull: false,
     defaultValue: false,
   },
-});
+};
 
-RolePermission.belongsTo(Role);
+//RolePermission.belongsTo(Role);
 
-module.exports = RolePermission;
+export default rolePermissionSchema;
