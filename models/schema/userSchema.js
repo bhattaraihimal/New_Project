@@ -1,5 +1,6 @@
 import { DataTypes } from "sequelize";
-import { Role } from "../model.js";
+// import { Role } from "../model.js";
+import roleSchema from "./roleSchema.js";
 
 const userSchema = {
   id: {
@@ -32,19 +33,26 @@ const userSchema = {
   active: {
     type: DataTypes.BOOLEAN,
     allowNull: false,
-    defaultValue: true, 
+    defaultValue: true,
   },
-  // role_id: { 
+  role_id: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: roleSchema,
+      key: "id",
+    },
+  },
+  // Your code Backup
+  // role_id: {
   //   type: DataTypes.INTEGER,
   //   references: {
   //     model: (async () => {
   //       const { Role } = await import('../model.js');
   //       return Role;
-  //     })(), 
+  //     })(),
   //     key: 'id',
   //   },
   // },
 };
-
 
 export default userSchema;
