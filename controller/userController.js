@@ -24,13 +24,13 @@ export const verifyUserToken = async (req, res, next) => {
 };
 
 export const registerUser = async (req, res, next) => {
-    const { email, fullName, password, contactNo, post} = req.body;
+    const { email, fullName, password, contactNo, post, role_id } = req.body;
 
     try {
         console.log('body data : ', req.body)
         
         // Check if required fields are provided
-        if (!email || !fullName || !password || !contactNo || !post ) {
+        if (!email || !fullName || !password || !contactNo || !post || !role_id ) {
             return res.status(400).json({ error: 'Please provide all the required information' });
         }
 
@@ -39,12 +39,15 @@ export const registerUser = async (req, res, next) => {
           if (existingUser) {
             return res.status(HttpStatus.CONFLICT_409).json({ error: 'User with this email already exists' });
         }
-           
+           console.log('Iam Here')
+
         // Hash the password
            const hashedPassword = await hashPassword(req.body.password);
+
+
        
            // Create new user with hased password
-        await userService.createUserService({ email, fullName, password: hashedPassword, contactNo, post });
+        await userService.createUserService({ email, fullName, password: hashedPassword, contactNo, post, role_id });
         res.json({ message: 'User registered successfully' });
     }
      catch (error) {
@@ -92,7 +95,7 @@ export const updateUserPassword = async (req, res,next) => {
         const token = await generateToken({ email }, secretKey, { expiresIn: '2h' });
 
         // Provide the user with a URL to reset their password
-        const resetUrl = `http://localhost:3001/auth/reset-password/${token}`;
+        const resetUrl = `http://localhost:3001/user/reset-password/${token}`;
 
         // Send the reset URL as a response
         res.json({ message: 'Password reset URL generated', resetUrl });
