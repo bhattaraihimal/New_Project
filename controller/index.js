@@ -8,6 +8,12 @@ export * as employeeController from "./employeeController.js";
 
 export * as informationController from "./informationController.js";
 
+export * as roleController from "./roleController.js";
+
+export * as rolePermissionController from "./rolePermissionController.js";
+
+
+
 
 
 

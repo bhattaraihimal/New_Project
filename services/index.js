@@ -8,3 +8,8 @@ export * as employeeService from "./employeeService.js";
 
 export * as informationService from "./informationService.js";
 
+export * as roleService from "./roleService.js";
+
+export * as rolePermissionService from "./rolePermissionService.js";
+
+
