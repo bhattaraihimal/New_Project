@@ -21,7 +21,7 @@ export const verifyToken = async (token) => {
   try {
     let verifyTokenResponse = await jwt.verify(token, secretKey);
     console.log("verifyTokenResponse : ", verifyTokenResponse);
-    let user = await userService.getUserByEmailService(verifyTokenResponse.email);
+    let user = await userService.getUserByIdAndEmailService(verifyTokenResponse.user_id, verifyTokenResponse.email);
     if (user) {
       let latestTracker = user.passwordTracker;
       // check if the token is expired due to change in password

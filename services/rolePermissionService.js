@@ -24,9 +24,9 @@ export const deleteRolePermissionByIdService = async (id) => {
     });
   };
 
-export const deleteAllRolePermissionsService = async () => {
-    return RolePermission.destroy({
-      where: {},
-      truncate: true
-    });
-  };
+// export const deleteAllRolePermissionsService = async () => {
+//     return RolePermission.destroy({
+//       where: {},
+//       truncate: true
+//     });
+//   };

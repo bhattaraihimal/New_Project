@@ -46,31 +46,60 @@ export const viewInformation = async (req, res, next) => {
     }
   };
 
+// export const updateInformation = async (req, res, next) => {
+//     try {
+//       const { id } = req.params;
+//       const { title, description, post, type, content } = req.body;
+  
+//       // Find information by id
+//       const information = await informationService.getInformationByIdService(id);
+//       if (!information) {
+//         return res.status(HttpStatus.NOTFOUND_404).json({ error: 'Information not found' });
+//       }
+  
+//       // Update information
+//       information.title = title;
+//       information.description = description;
+//       information.post = post;
+//       information.type = type;
+//       information.content = content;
+//       await information.save();
+  
+//       res.json({ message: 'Information updated successfully'});
+//     } catch (error) {
+//       console.error('Error updating information:', error);
+//       res.status(HttpStatus.INTERNAL_SERVER_ERROR_500).json({ error: 'Internal server error' });
+//     }
+//   };
+
 export const updateInformation = async (req, res, next) => {
-    try {
+  try {
       const { id } = req.params;
       const { title, description, post, type, content } = req.body;
-  
+
       // Find information by id
       const information = await informationService.getInformationByIdService(id);
       if (!information) {
-        return res.status(HttpStatus.NOTFOUND_404).json({ error: 'Information not found' });
+          return res.status(HttpStatus.NOTFOUND_404).json({ error: 'Information not found' });
       }
-  
-      // Update information
-      information.title = title;
-      information.description = description;
-      information.post = post;
-      information.type = type;
-      information.content = content;
-      await information.save();
-  
-      res.json({ message: 'Information updated successfully'});
-    } catch (error) {
+
+      // Prepare data to send for updating
+      const dataToUpdate = { title, description, post, type, content };
+
+      // Update information using updateInformationService
+      let response = await informationService.updateInformationService(id, dataToUpdate);
+
+      // Check response and send appropriate message
+      if (response[0] > 0) { 
+          res.status(HttpStatus.SUCCESS_200).json({ message: 'Information updated successfully' });
+      } else {
+          res.status(HttpStatus.BAD_REQUEST_400).json({ message: 'Update failed. No changes made.' });
+      }
+  } catch (error) {
       console.error('Error updating information:', error);
       res.status(HttpStatus.INTERNAL_SERVER_ERROR_500).json({ error: 'Internal server error' });
-    }
-  };
+  }
+};
 
 export const deleteInformation = async (req, res, next) => {
     try {

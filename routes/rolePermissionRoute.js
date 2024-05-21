@@ -13,7 +13,7 @@ rolePermissionRouter.route("/update/:id").patch(rolePermissionController.updateR
 
 rolePermissionRouter.route("/delete/:id").delete(rolePermissionController.deleteRolePermission);
 
-rolePermissionRouter.route("/deleteAll").delete(rolePermissionController.deleteAllRolePermission);
+// rolePermissionRouter.route("/deleteAll").delete(rolePermissionController.deleteAllRolePermission);
 
 
 export default rolePermissionRouter;

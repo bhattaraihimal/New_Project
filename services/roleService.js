@@ -24,9 +24,9 @@ export const deleteRoleByIdService = async (id) => {
     });
   };
 
-export const deleteAllRolesService = async () => {
-    return Role.destroy({
-      where: {},
-      truncate: true
-    });
-  };
+// export const deleteAllRolesService = async () => {
+//     return Role.destroy({
+//       where: {},
+//       truncate: true
+//     });
+//   };

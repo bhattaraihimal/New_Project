@@ -46,28 +46,57 @@ export const viewAd = async (req, res, next) => {
     }
   };
 
+// export const updateAd = async (req, res, next) => {
+//     try {
+//       const { id } = req.params;
+//       const { title, imageUrl } = req.body;
+  
+//       // Find ad by id
+//       const ads = await adsService.getAdByIdService(id);
+//       if (!ads) {
+//         return res.status(HttpStatus.NOTFOUND_404).json({ error: 'Ads not found' });
+//       }
+  
+//       // Update Ad
+//       ads.title = title;
+//       ads.imageUrl = imageUrl;
+//       await ads.save();
+  
+//       res.json({ message: 'Ad updated successfully'});
+//     } catch (error) {
+//       console.error('Error updating ad:', error);
+//       res.status(HttpStatus.INTERNAL_SERVER_ERROR_500).json({ error: 'Internal server error' });
+//     }
+//   };
+
 export const updateAd = async (req, res, next) => {
-    try {
+  try {
       const { id } = req.params;
       const { title, imageUrl } = req.body;
-  
+
       // Find ad by id
-      const ads = await adsService.getAdByIdService(id);
-      if (!ads) {
-        return res.status(HttpStatus.NOTFOUND_404).json({ error: 'Ads not found' });
+      const ad = await adsService.getAdByIdService(id);
+      if (!ad) {
+          return res.status(HttpStatus.NOTFOUND_404).json({ error: 'Ad not found' });
       }
-  
-      // Update Ad
-      ads.title = title;
-      ads.imageUrl = imageUrl;
-      await ads.save();
-  
-      res.json({ message: 'Ad updated successfully'});
-    } catch (error) {
+
+      // Prepare data to send for updating
+      const dataToUpdate = { title, imageUrl };
+
+      // Update Ad using updateAdService
+      let response = await adsService.updateAdService(id, dataToUpdate);
+
+      // Check response and send appropriate message
+      if (response[0] > 0) { // Check if at least one row was updated
+          res.status(HttpStatus.SUCCESS_200).json({ message: 'Ad updated successfully' });
+      } else {
+          res.status(HttpStatus.BAD_REQUEST_400).json({ message: 'Update failed. No changes made.' });
+      }
+  } catch (error) {
       console.error('Error updating ad:', error);
       res.status(HttpStatus.INTERNAL_SERVER_ERROR_500).json({ error: 'Internal server error' });
-    }
-  };
+  }
+};
 
 export const deleteAd = async (req, res, next) => {
     try {

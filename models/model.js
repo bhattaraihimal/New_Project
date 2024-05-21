@@ -34,7 +34,7 @@ Information.belongsTo(User, { foreignKey: "user_id" });
 User.belongsTo(Role, { foreignKey: "role_id" });
 Role.hasMany(User, { foreignKey: "role_id" });
 
-Role.hasMany(RolePermission, { foreignKey: "role_id" });
-RolePermission.belongsTo(Role, { foreignKey: "role_id" });
+Role.hasOne(RolePermission, { foreignKey: 'role_id' });
+RolePermission.belongsTo(Role, { foreignKey: 'role_id' });
 
 // export { Role, User, Ads, Employee, Information, Notice, RolePermission };

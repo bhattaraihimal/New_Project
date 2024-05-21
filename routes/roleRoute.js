@@ -13,7 +13,7 @@ roleRouter.route("/update/:id").patch(roleController.updateRole);
 
 roleRouter.route("/delete/:id").delete(roleController.deleteRole);
 
-roleRouter.route("/deleteAll").delete(roleController.deleteAllRole);
+// roleRouter.route("/deleteAll").delete(roleController.deleteAllRole);
 
 
 export default roleRouter;

@@ -32,3 +32,30 @@ export const getUserByContactNumberService = async (contactNumber) => {
 export const getUserByEmailService = async (email) => {
   return User.findOne({ where: { email: email } });
 };
+
+export const deleteUserByIdService = async (id) => {
+  return User.destroy({
+    where: { id: id }
+  });
+};
+
+export const deactivateUserByIdService = async (id) => {
+  return User.update(
+    { active: false },  
+    { where: { id: id } }  
+  );
+};
+
+export const getUserByIdAndEmailService = async (id, email) => {
+  try {
+    const user = await User.findOne({
+      where: {
+        id: id,
+        email: email
+      }
+    });
+    return user;
+  } catch (error) {
+    throw new Error(`Error in getUserByIdAndEmailService: ${error.message}`);
+  }
+};

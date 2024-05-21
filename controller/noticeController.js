@@ -46,27 +46,56 @@ export const viewNotice = async (req, res, next) => {
     }
   };
 
+// export const updateNotice = async (req, res, next) => {
+//     try {
+//       const { id } = req.params;
+//       const { title } = req.body;
+  
+//       // Find notice by id
+//       const notice = await noticeService.getNoticeByIdService(id);
+//       if (!notice) {
+//         return res.status(HttpStatus.NOTFOUND_404).json({ error: 'Notice not found' });
+//       }
+  
+//       // Update notice
+//       notice.title = title;
+//       await notice.save();
+  
+//       res.json({ message: 'Notice updated successfully'});
+//     } catch (error) {
+//       console.error('Error updating notice:', error);
+//       res.status(HttpStatus.INTERNAL_SERVER_ERROR_500).json({ error: 'Internal server error' });
+//     }
+//   };
+
 export const updateNotice = async (req, res, next) => {
-    try {
+  try {
       const { id } = req.params;
       const { title } = req.body;
-  
+
       // Find notice by id
       const notice = await noticeService.getNoticeByIdService(id);
       if (!notice) {
-        return res.status(HttpStatus.NOTFOUND_404).json({ error: 'Notice not found' });
+          return res.status(HttpStatus.NOTFOUND_404).json({ error: 'Notice not found' });
       }
-  
-      // Update notice
-      notice.title = title;
-      await notice.save();
-  
-      res.json({ message: 'Notice updated successfully'});
-    } catch (error) {
+
+      // Prepare data to send for updating
+      const dataToUpdate = { title };
+
+      // Update notice using updateNoticeService
+      let response = await noticeService.updateNoticeService(id, dataToUpdate);
+
+      // Check response and send appropriate message
+      if (response[0] > 0) { 
+          res.status(HttpStatus.SUCCESS_200).json({ message: 'Notice updated successfully' });
+      } else {
+          res.status(HttpStatus.BAD_REQUEST_400).json({ message: 'Update failed. No changes made.' });
+      }
+  } catch (error) {
       console.error('Error updating notice:', error);
       res.status(HttpStatus.INTERNAL_SERVER_ERROR_500).json({ error: 'Internal server error' });
-    }
-  };
+  }
+};
 
 export const deleteNotice = async (req, res, next) => {
     try {

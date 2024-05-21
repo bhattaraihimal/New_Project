@@ -46,31 +46,60 @@ export const viewEmployee = async (req, res, next) => {
     }
   };
 
+// export const updateEmployee = async (req, res, next) => {
+//     try {
+//       const { id } = req.params;
+//       const { name, contactNo, post, email, profilePic } = req.body;
+  
+//       // Find employee by id
+//       const employee = await employeeService.getEmployeeByIdService(id);
+//       if (!employee) {
+//         return res.status(HttpStatus.NOTFOUND_404).json({ error: 'Employee not found' });
+//       }
+  
+//       // Update employee
+//       employee.name = name;
+//       employee.contactNo = contactNo;
+//       employee.post = post;
+//       employee.email = email;
+//       employee.profilePic = profilePic;
+//       await employee.save();
+  
+//       res.json({ message: 'Employee updated successfully'});
+//     } catch (error) {
+//       console.error('Error updating ad:', error);
+//       res.status(HttpStatus.INTERNAL_SERVER_ERROR_500).json({ error: 'Internal server error' });
+//     }
+//   };
+
 export const updateEmployee = async (req, res, next) => {
-    try {
+  try {
       const { id } = req.params;
       const { name, contactNo, post, email, profilePic } = req.body;
-  
+
       // Find employee by id
       const employee = await employeeService.getEmployeeByIdService(id);
       if (!employee) {
-        return res.status(HttpStatus.NOTFOUND_404).json({ error: 'Employee not found' });
+          return res.status(HttpStatus.NOTFOUND_404).json({ error: 'Employee not found' });
       }
-  
-      // Update employee
-      employee.name = name;
-      employee.contactNo = contactNo;
-      employee.post = post;
-      employee.email = email;
-      employee.profilePic = profilePic;
-      await employee.save();
-  
-      res.json({ message: 'Employee updated successfully'});
-    } catch (error) {
-      console.error('Error updating ad:', error);
+
+      // Prepare data to send for updating
+      const dataToUpdate = { name, contactNo, post, email, profilePic };
+
+      // Update employee using updateEmployeeService
+      let response = await employeeService.updateEmployeeService(id, dataToUpdate);
+
+      // Check response and send appropriate message
+      if (response[0] > 0) { 
+          res.status(HttpStatus.SUCCESS_200).json({ message: 'Employee updated successfully' });
+      } else {
+          res.status(HttpStatus.BAD_REQUEST_400).json({ message: 'Update failed. No changes made.' });
+      }
+  } catch (error) {
+      console.error('Error updating employee:', error);
       res.status(HttpStatus.INTERNAL_SERVER_ERROR_500).json({ error: 'Internal server error' });
-    }
-  };
+  }
+};
 
 export const deleteEmployee = async (req, res, next) => {
     try {
