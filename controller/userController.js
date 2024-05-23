@@ -84,29 +84,34 @@ export const registerUser = async (req, res, next) => {
 };
 
 export const loginUser = async (req, res, next) => {
-    const { email, password } = req.body;
+  const { email, password } = req.body;
 
-    try {
-        // Find user by email
-        const user = await userService.getUserByEmailService(email);
-        if (!user) {
-            return res.status(HttpStatus.UNAUTHORIZED_401).json({ error: 'Invalid email or password' });
-        }
-
-        // Compare hashed password
-        const isPasswordValid = await comparePassword(password, user.password);
-        if (!isPasswordValid) {
-            return res.status(HttpStatus.UNAUTHORIZED_401).json({ error: 'Invalid email or password' });
-        }
-
-        // Generate JWT token
-        const token = await generateToken({ email: user.email, user_id: user.id });
-
-        res.json({ message: 'Log in successful', token });
-    } catch (error) {
-        console.error('Error logging in user:', error);
-        res.status(HttpStatus.INTERNAL_SERVER_ERROR_500).json({ error: 'Internal server error' });
+  try {
+    // Find user by email
+    const user = await userService.getUserByEmailService(email);
+    if (!user) {
+      return res.status(HttpStatus.UNAUTHORIZED_401).json({ error: 'Invalid email or password' });
     }
+
+    // Compare hashed password
+    const isPasswordValid = await comparePassword(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(HttpStatus.UNAUTHORIZED_401).json({ error: 'Invalid email or password' });
+    }
+
+    // Generate JWT token
+    const token = await generateToken({ email: user.email, user_id: user.id, fullName: user.fullName, contactNo: user.contactNo, post: user.post, active: user.active, role_id: user.role_id });
+
+    // Set the token in the response header
+   // res.setHeader('Auth', `Bearer ${token}`);
+
+    // Send the response
+    res.json({ message: 'Log in successful', token });
+
+  } catch (error) {
+    console.error('Error logging in user:', error);
+    res.status(HttpStatus.INTERNAL_SERVER_ERROR_500).json({ error: 'Internal server error' });
+  }
 };
 
 export const updateUserPassword = async (req, res,next) => {
@@ -120,7 +125,7 @@ export const updateUserPassword = async (req, res,next) => {
         }
 
         // Generate a token containing user phone
-        const token = await generateToken({ email: user.email, user_id: user.id });
+        const token = await generateToken({ email: user.email, user_id: user.id, fullName: user.fullName, contactNo: user.contactNo, post: user.post, active: user.active, role_id: user.role_id });
 
         // Provide the user with a URL to reset their password
         const resetUrl = `http://localhost:3001/user/reset-password/${token}`;

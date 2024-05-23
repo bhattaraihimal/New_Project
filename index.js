@@ -23,7 +23,8 @@ app.use(
   app.use(`${apiVersion}`, apiRouter);
   app.use(express.static(staticFolder));
   
-  sequelize.sync({ alter: true });
+  sequelize.sync();
+  // sequelize.sync({ alter: true });
   
   app.get('/dashboard', verifyUserToken, (req, res) => {
     res.json({ message: 'Welcome to the dashboard' });

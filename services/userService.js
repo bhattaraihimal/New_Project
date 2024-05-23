@@ -59,3 +59,12 @@ export const getUserByIdAndEmailService = async (id, email) => {
     throw new Error(`Error in getUserByIdAndEmailService: ${error.message}`);
   }
 };
+
+export const getUserByAttributes = async (attributes) => {
+  try {
+    const user = await User.findOne({ where: attributes });
+    return user;
+  } catch (error) {
+    throw new Error("Failed to fetch user by attributes.");
+  }
+};
