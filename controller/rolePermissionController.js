@@ -23,7 +23,7 @@ export const viewAllRolePermissions = async (req, res, next) => {
     try {
       const rolePermissions = await rolePermissionService.getAllRolePermissionService();
      // res.json({ rolePermissions });
-      res.status(HttpStatus.OK).json({ data: rolePermissions });
+      res.status(HttpStatus.SUCCESS_200).json({ data: rolePermissions });
 
     } catch (error) {
       console.error('Error viewing role permissions:', error);
@@ -36,13 +36,13 @@ export const viewRolePermission = async (req, res, next) => {
       const { id } = req.params;
   
       // Find role permission by id
-      const rolePermission = await rolePermissionService.getRolePermissionByIdService(id);
+      const rolePermission = await rolePermissionService.getRolePermissionByIdServiceonly(id);
       if (!rolePermission) {
         return res.status(HttpStatus.NOTFOUND_404).json({ error: 'Role Permission not found' });
       }
   
     //  res.json({ rolePermission });
-      res.status(HttpStatus.OK).json({ data: rolePermission });
+      res.status(HttpStatus.SUCCESS_200).json({ data: rolePermission });
 
     } catch (error) {
       console.error('Error viewing role permission:', error);
@@ -80,7 +80,7 @@ export const updateRolePermission = async (req, res, next) => {
       const { notice, ads, information, employee } = req.body;
 
       // Find role permission by id
-      const rolePermission = await rolePermissionService.getRolePermissionByIdService(id);
+      const rolePermission = await rolePermissionService.getRolePermissionByIdServiceonly(id);
       if (!rolePermission) {
           return res.status(HttpStatus.NOTFOUND_404).json({ error: 'Role Permission not found' });
       }
@@ -108,7 +108,7 @@ export const deleteRolePermission = async (req, res, next) => {
       const { id } = req.params;
   
       // Find role permission by id
-      const rolePermission = await rolePermissionService.getRolePermissionByIdService(id);
+      const rolePermission = await rolePermissionService.getRolePermissionByIdServiceonly(id);
       if (!rolePermission) {
         return res.status(HttpStatus.NOTFOUND_404).json({ error: 'Role Permission not found' });
       }

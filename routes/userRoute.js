@@ -8,19 +8,19 @@ const userRouter = Router();
 
 userRouter.route("/register").post(userController.registerUser);
 
-userRouter.route("/login").post(userController.loginUser);
+userRouter.route("/login").post(isAuthorize, userController.loginUser);
 
-userRouter.route("/reset-password").post(userController.updateUserPassword);
+userRouter.route("/reset-password").post(isAuthorize, userController.updateUserPassword);
 
-userRouter.route("/reset-password/:token").post(userController.updateUserPasswordValidation);
+userRouter.route("/reset-password/:token").post(isAuthorize, userController.updateUserPasswordValidation);
 
-userRouter.route("/update/:id").patch(userController.updateUser);
+userRouter.route("/update/:id").patch(isAuthorize, userController.updateUser);
 
-userRouter.route("/delete/:id").delete(userController.deleteUser);
+userRouter.route("/delete/:id").delete(isAuthorize, userController.deleteUser);
 
-userRouter.route("/viewAll").get(userController.viewAllUsers);
+userRouter.route("/viewAll").get(isAuthorize, userController.viewAllUsers);
 
-userRouter.route("/view/:id").get(userController.viewUser);
+userRouter.route("/view/:id").get(isAuthorize, userController.viewUser);
 
 
 export default userRouter;

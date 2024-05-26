@@ -23,31 +23,31 @@ import { generateToken, verifyToken } from "../utils/tokenController.js";
 //     }
 // };
 
-export const verifyUserToken = async (req, res, next) => {
-  try {
-    let { at } = req.headers;
-    if (at) {
-      let response = await verifyToken(at);
-      if (response === 400) {
-        res
-          .status(HttpStatus.UNAUTHORIZED_401)
-          .json({ message: "Not allowed" });
-      } else {
-        res.locals.sauthenticated = response.email ? true : false;
-        res.locals.email = response.email;
-        res.locals.fullname = response.fullname;
-        res.locals.contactNo = response.contactNo;
-        res.locals.active = response.active;
-        res.status(HttpStatus.SUCCESS_200).json({ token: response });
-      }
-    } else {
-      res.status(HttpStatus.UNAUTHORIZED_401).json({ message: "Not allowed" });
-    }
-  } catch (err) {
-    console.log("err : ", err);
-    res.status(HttpStatus.BAD_REQUEST_400).json(err);
-  }
-};
+// export const verifyUserToken = async (req, res, next) => {
+//   try {
+//     let { at } = req.headers;
+//     if (at) {
+//       let response = await verifyToken(at);
+//       if (response === 400) {
+//         res
+//           .status(HttpStatus.UNAUTHORIZED_401)
+//           .json({ message: "Not allowed" });
+//       } else {
+//         res.locals.sauthenticated = response.email ? true : false;
+//         res.locals.email = response.email;
+//         res.locals.fullname = response.fullname;
+//         res.locals.contactNo = response.contactNo;
+//         res.locals.active = response.active;
+//         res.status(HttpStatus.SUCCESS_200).json({ token: response });
+//       }
+//     } else {
+//       res.status(HttpStatus.UNAUTHORIZED_401).json({ message: "Not allowed" });
+//     }
+//   } catch (err) {
+//     console.log("err : ", err);
+//     res.status(HttpStatus.BAD_REQUEST_400).json(err);
+//   }
+// };
 
 
 export const registerUser = async (req, res, next) => {
@@ -115,6 +115,7 @@ export const loginUser = async (req, res, next) => {
 };
 
 export const updateUserPassword = async (req, res,next) => {
+   const role =  res.locals.role
     const { email } = req.body;
 
     try {
@@ -215,7 +216,7 @@ export const updateUserPasswordValidation = async (req, res,next) => {
 export const updateUser = async (req, res, next) => {
   try {
       const { id } = req.params;
-      const { email, fullName, password, contactNo, post, active, role_id } = req.body;
+      const { email, fullName, contactNo, post, active, role_id } = req.body;
 
       // Find user by id
       const user = await userService.getUserByIdService(id);
@@ -224,7 +225,7 @@ export const updateUser = async (req, res, next) => {
       }
 
       // Prepare data to send for updating
-      const dataToUpdate = { email, fullName, password, contactNo, post, active, role_id };
+      const dataToUpdate = { email, fullName, contactNo, post, active, role_id };
 
       // Update user using updateUserService
       let response = await userService.updateUserService(id, dataToUpdate);

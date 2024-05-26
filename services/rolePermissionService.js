@@ -12,11 +12,11 @@ export const getAllRolePermissionService = async () => {
   return RolePermission.findAll({});
 };
 
-// export const getRolePermissionByIdService = async (id) => {
-//   return RolePermission.findOne({
-//     where: { id: id }
-//       });
-// };
+export const getRolePermissionByIdServiceonly = async (id) => {
+  return RolePermission.findOne({
+    where: { id: id }
+      });
+};
 
 export const deleteRolePermissionByIdService = async (id) => {
     return RolePermission.destroy({

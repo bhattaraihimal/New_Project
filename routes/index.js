@@ -6,6 +6,8 @@ import employeeRouter from "./employeeRoute.js";
 import informationRouter from "./informationRoute.js";
 import roleRouter from "./roleRoute.js";
 import rolePermissionRouter from "./rolePermissionRoute.js";
+import uploadFilesRouter from "./utils/uploadFileRoute.js";
+
 
 const apiRouter = Router();
 
@@ -43,6 +45,11 @@ const routePath = [
     {
         path: "/rolePermission",
         router: rolePermissionRouter,
+    },
+
+    {
+        path: "/file",
+        router: uploadFilesRouter,
     },
     
 ];

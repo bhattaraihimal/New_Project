@@ -1,6 +1,9 @@
 import { HttpStatus } from "../config/httpStatusCodes.js";
 import { adsService, rolePermissionService } from "../services/index.js";
 import { verifyToken } from "../utils/tokenController.js";
+import { isAuthorize } from "../middleware/isAuthorize.js";
+import cloudinary from "../utils/cloudinary.js";
+
 
 // export const createAd = async (req, res, next) => {
 //     try {
@@ -21,28 +24,31 @@ import { verifyToken } from "../utils/tokenController.js";
 //   };
 
 export const createAd = async (req, res, next) => {
+  const role_id =  res.locals.role_id
+  const user_id = res.locals.user_id
+
   try {
-      const { title, imageUrl } = req.body;
+      const { title } = req.body;
 
       // Check if required fields are provided
-      if (!title || !imageUrl) {
+      if (!title || !req.file) {
           return res.status(HttpStatus.BAD_REQUEST_400).json({ error: 'Please provide all the required information' });
       }
 
-      // Extract the token from the 'Auth' header
-      const authHeader = req.header('Auth');
-      if (!authHeader) {
-          return res.status(HttpStatus.UNAUTHORIZED_401).json({ error: 'No token provided' });
-      }
-      const token = authHeader;
+      // // Extract the token from the 'Au th' header `    
+      // const authHeader = req.header('Auth');
+      // if (!authHeader) {
+      //     return res.status(HttpStatus.UNAUTHORIZED_401).json({ error: 'No token provided' });
+      // }
+      // const token = authHeader;
 
-      // Verify the token
-      const verificationResult = await verifyToken(token);
-      if (verificationResult.error) {
-          return res.status(verificationResult.statusCode).json({ error: verificationResult.error });
-      }
+      // // Verify the token
+      // const verificationResult = await verifyToken(token);
+      // if (verificationResult.error) {
+      //     return res.status(verificationResult.statusCode).json({ error: verificationResult.error });
+      // }
 
-      const { role_id, user_id: tokenUserId } = verificationResult;
+      // const { role_id, user_id: tokenUserId } = verificationResult;
 
       // Check if the user has the required permission
       const hasPermission = await rolePermissionService.getRolePermissionByIdService({ role_id, requiredPermission: 'ads' });
@@ -50,8 +56,41 @@ export const createAd = async (req, res, next) => {
           return res.status(HttpStatus.FORBIDDEN_403).json({ error: 'You do not have permission to create an ad' });
       }
 
+        // Upload the image to Cloudinary
+    const uploadResult = await cloudinary.uploader.upload(req.file.path);
+    const imageUrl = uploadResult.secure_url;
+     
+     
+     
+      // Upload each image to Cloudinary and gather the URLs
+    // const uploadPromises = req.files.map(file => cloudinary.uploader.upload(file.path));
+    // const uploadResults = await Promise.all(uploadPromises);
+    // const imageUrl = uploadResults.map(result => result.secure_url);
+   
+    // Upload all images to Cloudinary and gather the URLs
+
+//     const uploadPromises = req.files.map(file => cloudinary.uploader.upload(file.path));
+// const uploadResults = await Promise.all(uploadPromises);
+
+// // Extract public IDs of uploaded images
+// const publicIds = uploadResults.map(result => result.public_id);
+
+// // Construct a transformation URL to represent multiple images
+// const transformation = {
+//   effect: "collage",
+//   width: 800,
+//   height: 600,
+//   crop: "fill",
+//   gravity: "center",
+//   images: publicIds.join(","), // Concatenate public IDs of uploaded images
+// };
+
+// // Generate a URL for the collage effect
+// const collageUrl = cloudinary.url("sample", { transformation });
+
+
       // Create new ad
-      const ad = await adsService.createAdService({ title, imageUrl, user_id: tokenUserId });
+      const ad = await adsService.createAdService({ title, imageUrl: imageUrl, user_id: user_id });
       res.json({ message: 'Ad created successfully', ad });
   } catch (error) {
       console.error('Error creating ad:', error);
@@ -70,21 +109,23 @@ export const createAd = async (req, res, next) => {
 //   };
 
 export const viewAllAds = async (req, res, next) => {
+  const role_id =  res.locals.role_id
+
   try {
       // Extract the token from the 'Auth' header
-      const authHeader = req.header('Auth');
-      if (!authHeader) {
-          return res.status(HttpStatus.UNAUTHORIZED_401).json({ error: 'No token provided' });
-      }
-      const token = authHeader;
+      // const authHeader = req.header('Auth');
+      // if (!authHeader) {
+      //     return res.status(HttpStatus.UNAUTHORIZED_401).json({ error: 'No token provided' });
+      // }
+      // const token = authHeader;
 
-      // Verify the token
-      const verificationResult = await verifyToken(token);
-      if (verificationResult.error) {
-          return res.status(verificationResult.statusCode).json({ error: verificationResult.error });
-      }
+      // // Verify the token
+      // const verificationResult = await verifyToken(token);
+      // if (verificationResult.error) {
+      //     return res.status(verificationResult.statusCode).json({ error: verificationResult.error });
+      // }
 
-      const { role_id } = verificationResult;
+      // const { role_id } = verificationResult;
 
       // Check if the user has the required permission
       const hasPermission = await rolePermissionService.getRolePermissionByIdService({ role_id, requiredPermission: 'ads' });
@@ -119,23 +160,25 @@ export const viewAllAds = async (req, res, next) => {
 //   };
 
 export const viewAd = async (req, res, next) => {
+  const role_id =  res.locals.role_id
+
   try {
       const { id } = req.params;
 
-      // Extract the token from the 'Auth' header
-      const authHeader = req.header('Auth');
-      if (!authHeader) {
-          return res.status(HttpStatus.UNAUTHORIZED_401).json({ error: 'No token provided' });
-      }
-      const token = authHeader;
+      // // Extract the token from the 'Auth' header
+      // const authHeader = req.header('Auth');
+      // if (!authHeader) {
+      //     return res.status(HttpStatus.UNAUTHORIZED_401).json({ error: 'No token provided' });
+      // }
+      // const token = authHeader;
 
-      // Verify the token
-      const verificationResult = await verifyToken(token);
-      if (verificationResult.error) {
-          return res.status(verificationResult.statusCode).json({ error: verificationResult.error });
-      }
+      // // Verify the token
+      // const verificationResult = await verifyToken(token);
+      // if (verificationResult.error) {
+      //     return res.status(verificationResult.statusCode).json({ error: verificationResult.error });
+      // }
 
-      const { role_id } = verificationResult;
+      // const { role_id } = verificationResult;
 
       // Check if the user has the required permission
       const hasPermission = await rolePermissionService.getRolePermissionByIdService({ role_id, requiredPermission: 'ads' });
@@ -209,24 +252,26 @@ export const viewAd = async (req, res, next) => {
 // };
 
 export const updateAd = async (req, res, next) => {
+  const role_id =  res.locals.role_id
+
   try {
     const { id } = req.params;
-    const { title, imageUrl } = req.body;
+    const { title } = req.body;
 
-    // Extract the token from the 'Auth' header
-    const authHeader = req.header('Auth');
-    if (!authHeader) {
-      return res.status(HttpStatus.UNAUTHORIZED_401).json({ error: 'No token provided' });
-    }
-    const token = authHeader;
+    // // Extract the token from the 'Auth' header
+    // const authHeader = req.header('Auth');
+    // if (!authHeader) {
+    //   return res.status(HttpStatus.UNAUTHORIZED_401).json({ error: 'No token provided' });
+    // }
+    // const token = authHeader;
 
-    // Verify the token
-    const verificationResult = await verifyToken(token);
-    if (verificationResult.error) {
-      return res.status(verificationResult.statusCode).json({ error: verificationResult.error });
-    }
+    // // Verify the token
+    // const verificationResult = await verifyToken(token);
+    // if (verificationResult.error) {
+    //   return res.status(verificationResult.statusCode).json({ error: verificationResult.error });
+    // }
 
-    const { role_id } = verificationResult;
+    // const { role_id } = verificationResult;
 
     // Check if the user has the required permission
     const hasPermission = await rolePermissionService.getRolePermissionByIdService({ role_id, requiredPermission: 'ads' });
@@ -241,10 +286,17 @@ export const updateAd = async (req, res, next) => {
     }
 
     // Prepare data to send for updating
-    const dataToUpdate = { title, imageUrl };
+    const dataToUpdate = { title };
+
+     // Handle image upload if a file is provided
+     if (req.file) {
+      const uploadResult = await cloudinary.uploader.upload(req.file.path);
+      const imageUrl = uploadResult.secure_url;
+      dataToUpdate.imageUrl = imageUrl;
+    }
 
     // Update Ad using updateAdService
-    let response = await adsService.updateAdService(id, dataToUpdate);
+    const response = await adsService.updateAdService(id, dataToUpdate);
 
     // Check response and send appropriate message
     if (response[0] > 0) { // Check if at least one row was updated
@@ -279,23 +331,25 @@ export const updateAd = async (req, res, next) => {
 //   };
 
 export const deleteAd = async (req, res, next) => {
+  const role_id =  res.locals.role_id
+
   try {
     const { id } = req.params;
 
-    // Extract the token from the 'Auth' header
-    const authHeader = req.header('Auth');
-    if (!authHeader) {
-      return res.status(HttpStatus.UNAUTHORIZED_401).json({ error: 'No token provided' });
-    }
-    const token = authHeader;
+    // // Extract the token from the 'Auth' header
+    // const authHeader = req.header('Auth');
+    // if (!authHeader) {
+    //   return res.status(HttpStatus.UNAUTHORIZED_401).json({ error: 'No token provided' });
+    // }
+    // const token = authHeader;
 
-    // Verify the token
-    const verificationResult = await verifyToken(token);
-    if (verificationResult.error) {
-      return res.status(verificationResult.statusCode).json({ error: verificationResult.error });
-    }
+    // // Verify the token
+    // const verificationResult = await verifyToken(token);
+    // if (verificationResult.error) {
+    //   return res.status(verificationResult.statusCode).json({ error: verificationResult.error });
+    // }
 
-    const { role_id } = verificationResult;
+    // const { role_id } = verificationResult;
 
     // Check if the user has the required permission
     const hasPermission = await rolePermissionService.getRolePermissionByIdService({ role_id, requiredPermission: 'ads' });
@@ -334,23 +388,26 @@ export const deleteAd = async (req, res, next) => {
 //     }
 //   };
 
+
 export const deleteAllAds = async (req, res) => {
+  const role_id =  res.locals.role_id
+
   try {
     // Extract the token from the 'Auth' header
-    const authHeader = req.header('Auth');
-    if (!authHeader) {
-      return res.status(HttpStatus.UNAUTHORIZED_401).json({ error: 'No token provided' });
-    }
-    const token = authHeader;
+    // const authHeader = req.header('Auth');
+    // if (!authHeader) {
+    //   return res.status(HttpStatus.UNAUTHORIZED_401).json({ error: 'No token provided' });
+    // }
+    // const token = authHeader;
 
-    // Verify the token
-    const verificationResult = await verifyToken(token);
-    if (verificationResult.error) {
-      return res.status(verificationResult.statusCode).json({ error: verificationResult.error });
-    }
+    // // Verify the token
+    // const verificationResult = await verifyToken(token);
+    // if (verificationResult.error) {
+    //   return res.status(verificationResult.statusCode).json({ error: verificationResult.error });
+    // }
 
-    const { role_id } = verificationResult;
-
+    // const { role_id } = verificationResult;
+    
     // Check if the user has the required permission
     const hasPermission = await rolePermissionService.getRolePermissionByIdService({ role_id, requiredPermission: 'ads' });
     if (!hasPermission) {

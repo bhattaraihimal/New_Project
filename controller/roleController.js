@@ -45,6 +45,7 @@ import { rolePermissionService, roleService } from "../services/index.js";
 
 
 export const createRole = async (req, res, next) => {
+  
   try {
     const { title, notice, ads, information, employee } = req.body;
 
@@ -85,7 +86,7 @@ export const createRole = async (req, res, next) => {
 export const viewAllRole = async (req, res, next) => {
     try {
       const roles = await roleService.getAllRoleService();
-      res.status(HttpStatus.OK).json({ roles });
+      res.status(HttpStatus.SUCCESS_200).json({ roles });
     } catch (error) {
       console.error('Error viewing roles:', error);
       res.status(HttpStatus.INTERNAL_SERVER_ERROR_500).json({ error: 'Internal server error' });
@@ -102,7 +103,7 @@ export const viewRole = async (req, res, next) => {
         return res.status(HttpStatus.NOTFOUND_404).json({ error: 'Role not found' });
       }
   
-    res.status(HttpStatus.OK).json({ role });
+    res.status(HttpStatus.SUCCESS_200).json({ role });
     } catch (error) {
       console.error('Error viewing role:', error);
       res.status(HttpStatus.INTERNAL_SERVER_ERROR_500).json({ error: 'Internal server error' });

@@ -5,7 +5,7 @@ import bodyParser from "body-parser";
 import { apiVersion, port, staticFolder } from "./config/config.js";
 import apiRouter from "./routes/index.js";
 import { connectToDB, sequelize } from "./utils/database.js";
-import { verifyUserToken } from './controller/userController.js';
+import { isAuthorize } from './middleware/isAuthorize.js';
 
 const app = express();
 
@@ -26,7 +26,7 @@ app.use(
   sequelize.sync();
   // sequelize.sync({ alter: true });
   
-  app.get('/dashboard', verifyUserToken, (req, res) => {
+  app.get('/dashboard', isAuthorize, (req, res) => {
     res.json({ message: 'Welcome to the dashboard' });
 });
 

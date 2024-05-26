@@ -137,6 +137,9 @@ import { RolePermission } from "../models/model.js";
 // };
 
 export const createNotice = async (req, res, next) => {
+    const role_id =  res.locals.role_id
+  const user_id = res.locals.user_id
+
   try {
     const { title } = req.body;
 
@@ -144,24 +147,24 @@ export const createNotice = async (req, res, next) => {
       return res.status(HttpStatus.BAD_REQUEST_400).json({ error: 'Please provide all the required information' });
     }
 
-    const authHeader = req.header('Auth');
-    if (!authHeader) {
-      return res.status(HttpStatus.UNAUTHORIZED_401).json({ error: 'No token provided' });
-    }
-
-    const token = authHeader
-    // const token = authHeader.split(' ')[1];
-    // if (!token) {
-    //   return res.status(HttpStatus.UNAUTHORIZED_401).json({ error: 'Invalid token format' });
+    // const authHeader = req.header('Auth');
+    // if (!authHeader) {
+    //   return res.status(HttpStatus.UNAUTHORIZED_401).json({ error: 'No token provided' });
     // }
 
-    const verificationResult = await verifyToken(token);
+    // const token = authHeader
+    // // const token = authHeader.split(' ')[1];
+    // // if (!token) {
+    // //   return res.status(HttpStatus.UNAUTHORIZED_401).json({ error: 'Invalid token format' });
+    // // }
 
-    if (verificationResult.error) {
-      return res.status(verificationResult.statusCode).json({ error: verificationResult.error });
-    }
+    // const verificationResult = await verifyToken(token);
 
-    const { role_id, user_id: tokenUserId } = verificationResult;
+    // if (verificationResult.error) {
+    //   return res.status(verificationResult.statusCode).json({ error: verificationResult.error });
+    // }
+
+    // const { role_id, user_id: tokenUserId } = verificationResult;
 
     // Log the user IDs for debugging
    // console.log('Request user_id:', user_id);
@@ -181,7 +184,7 @@ export const createNotice = async (req, res, next) => {
       return res.status(HttpStatus.FORBIDDEN_403).json({ error: 'You do not have permission to create a notice' });
     }
 
-    const notice = await noticeService.createNoticeService({ title, user_id:tokenUserId });
+    const notice = await noticeService.createNoticeService({ title, user_id: user_id });
     res.json({ message: 'Notice created successfully', notice });
   } catch (error) {
     console.error('Error creating notice:', error);
@@ -200,21 +203,23 @@ export const createNotice = async (req, res, next) => {
 //   };
 
 export const viewAllNotices = async (req, res, next) => {
+    const role_id =  res.locals.role_id
+
   try {
       // Extract the token from the 'Auth' header
-      const authHeader = req.header('Auth');
-      if (!authHeader) {
-          return res.status(HttpStatus.UNAUTHORIZED_401).json({ error: 'No token provided' });
-      }
-      const token = authHeader;
+    //   const authHeader = req.header('Auth');
+    //   if (!authHeader) {
+    //       return res.status(HttpStatus.UNAUTHORIZED_401).json({ error: 'No token provided' });
+    //   }
+    //   const token = authHeader;
 
-      // Verify the token
-      const verificationResult = await verifyToken(token);
-      if (verificationResult.error) {
-          return res.status(verificationResult.statusCode).json({ error: verificationResult.error });
-      }
+    //   // Verify the token
+    //   const verificationResult = await verifyToken(token);
+    //   if (verificationResult.error) {
+    //       return res.status(verificationResult.statusCode).json({ error: verificationResult.error });
+    //   }
 
-      const { role_id, user_id: tokenUserId } = verificationResult;
+    //   const { role_id, user_id: tokenUserId } = verificationResult;
 
       // Check if the user has the required permission
       const hasPermission = await rolePermissionService.getRolePermissionByIdService({ role_id, requiredPermission: 'notice' });
@@ -249,23 +254,25 @@ export const viewAllNotices = async (req, res, next) => {
 //   };
 
 export const viewNotice = async (req, res, next) => {
+    const role_id =  res.locals.role_id
+
   try {
       const { id } = req.params;
 
       // Extract the token from the 'Auth' header
-      const authHeader = req.header('Auth');
-      if (!authHeader) {
-          return res.status(HttpStatus.UNAUTHORIZED_401).json({ error: 'No token provided' });
-      }
-      const token = authHeader;
+    //   const authHeader = req.header('Auth');
+    //   if (!authHeader) {
+    //       return res.status(HttpStatus.UNAUTHORIZED_401).json({ error: 'No token provided' });
+    //   }
+    //   const token = authHeader;
 
-      // Verify the token
-      const verificationResult = await verifyToken(token);
-      if (verificationResult.error) {
-          return res.status(verificationResult.statusCode).json({ error: verificationResult.error });
-      }
+    //   // Verify the token
+    //   const verificationResult = await verifyToken(token);
+    //   if (verificationResult.error) {
+    //       return res.status(verificationResult.statusCode).json({ error: verificationResult.error });
+    //   }
 
-      const { role_id } = verificationResult;
+    //   const { role_id } = verificationResult;
 
       // Check if the user has the required permission
       const hasPermission = await rolePermissionService.getRolePermissionByIdService({ role_id, requiredPermission: 'notice' });
@@ -340,24 +347,26 @@ export const viewNotice = async (req, res, next) => {
 // };
 
 export const updateNotice = async (req, res, next) => {
+    const role_id =  res.locals.role_id
+
   try {
       const { id } = req.params;
       const { title } = req.body;
 
       // Extract the token from the 'Auth' header
-      const authHeader = req.header('Auth');
-      if (!authHeader) {
-          return res.status(HttpStatus.UNAUTHORIZED_401).json({ error: 'No token provided' });
-      }
-      const token = authHeader;
+    //   const authHeader = req.header('Auth');
+    //   if (!authHeader) {
+    //       return res.status(HttpStatus.UNAUTHORIZED_401).json({ error: 'No token provided' });
+    //   }
+    //   const token = authHeader;
 
-      // Verify the token
-      const verificationResult = await verifyToken(token);
-      if (verificationResult.error) {
-          return res.status(verificationResult.statusCode).json({ error: verificationResult.error });
-      }
+    //   // Verify the token
+    //   const verificationResult = await verifyToken(token);
+    //   if (verificationResult.error) {
+    //       return res.status(verificationResult.statusCode).json({ error: verificationResult.error });
+    //   }
 
-      const { role_id } = verificationResult;
+    //   const { role_id } = verificationResult;
 
       // Check if the user has the required permission
       const hasPermission = await rolePermissionService.getRolePermissionByIdService({ role_id, requiredPermission: 'notice' });
@@ -410,23 +419,25 @@ export const updateNotice = async (req, res, next) => {
 //   };
 
 export const deleteNotice = async (req, res, next) => {
+    const role_id =  res.locals.role_id
+
   try {
       const { id } = req.params;
 
       // Extract the token from the 'Auth' header
-      const authHeader = req.header('Auth');
-      if (!authHeader) {
-          return res.status(HttpStatus.UNAUTHORIZED_401).json({ error: 'No token provided' });
-      }
-      const token = authHeader;
+    //   const authHeader = req.header('Auth');
+    //   if (!authHeader) {
+    //       return res.status(HttpStatus.UNAUTHORIZED_401).json({ error: 'No token provided' });
+    //   }
+    //   const token = authHeader;
 
-      // Verify the token
-      const verificationResult = await verifyToken(token);
-      if (verificationResult.error) {
-          return res.status(verificationResult.statusCode).json({ error: verificationResult.error });
-      }
+    //   // Verify the token
+    //   const verificationResult = await verifyToken(token);
+    //   if (verificationResult.error) {
+    //       return res.status(verificationResult.statusCode).json({ error: verificationResult.error });
+    //   }
 
-      const { role_id } = verificationResult;
+    //   const { role_id } = verificationResult;
 
       // Check if the user has the required permission
       const hasPermission = await rolePermissionService.getRolePermissionByIdService({ role_id, requiredPermission: 'notice' });
@@ -466,21 +477,23 @@ export const deleteNotice = async (req, res, next) => {
 //   };
 
 export const deleteAllNotices = async (req, res) => {
+    const role_id =  res.locals.role_id
+
   try {
       // Extract the token from the 'Auth' header
-      const authHeader = req.header('Auth');
-      if (!authHeader) {
-          return res.status(HttpStatus.UNAUTHORIZED_401).json({ error: 'No token provided' });
-      }
-      const token = authHeader;
+    //   const authHeader = req.header('Auth');
+    //   if (!authHeader) {
+    //       return res.status(HttpStatus.UNAUTHORIZED_401).json({ error: 'No token provided' });
+    //   }
+    //   const token = authHeader;
 
-      // Verify the token
-      const verificationResult = await verifyToken(token);
-      if (verificationResult.error) {
-          return res.status(verificationResult.statusCode).json({ error: verificationResult.error });
-      }
+    //   // Verify the token
+    //   const verificationResult = await verifyToken(token);
+    //   if (verificationResult.error) {
+    //       return res.status(verificationResult.statusCode).json({ error: verificationResult.error });
+    //   }
 
-      const { role_id } = verificationResult;
+    //   const { role_id } = verificationResult;
 
       // Check if the user has the required permission
       const hasPermission = await rolePermissionService.getRolePermissionByIdService({ role_id, requiredPermission: 'notice' });

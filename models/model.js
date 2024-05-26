@@ -7,6 +7,7 @@ import employeeSchema from "./schema/employeeSchema.js";
 import informationSchema from "./schema/informationSchema.js";
 import noticeSchema from "./schema/noticeSchema.js";
 import rolepermissonSchema from "./schema/rolepermissonSchema.js";
+import imageSchema from "./schema/utils/imageSchema.js";
 
 export const Role = sequelize.define("role", roleSchema);
 export const User = sequelize.define("user", userSchema);
@@ -18,6 +19,8 @@ export const RolePermission = sequelize.define(
   "rolePermission",
   rolepermissonSchema
 );
+export const ImageCollection = sequelize.define("imageCollection", imageSchema);
+
 
 User.hasMany(Notice, { foreignKey: "user_id" });
 Notice.belongsTo(User, { foreignKey: "user_id" });

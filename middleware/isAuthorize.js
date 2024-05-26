@@ -21,9 +21,10 @@ import { verifyToken } from "../utils/tokenController.js";
 
 export const isAuthorize = async (req, res, next) => {
     try {
-      let { at } = req.headers;
-      if (at) {
-        let response = await verifyToken(at);
+      let { auth } = req.headers;
+      console.log('Auth : ', req.headers)
+      if (auth) {
+        let response = await verifyToken(auth);
         if (response === 400) {
           res
             .status(HttpStatus.UNAUTHORIZED_401)
@@ -33,11 +34,14 @@ export const isAuthorize = async (req, res, next) => {
             .status(HttpStatus.UNAUTHORIZED_401)
             .json({ message: "Please login again" });
         } else {
-          res.locals.email = response.email;
-          res.locals.fullName = response.fullName;
-          res.locals.contactNo = response.contactNo;
-          res.locals.active = response.active;
-          res.locals.sauthenticated = response.email ? true : false;
+          res.locals.role_id = response.role_id;
+          res.locals.user_id = response.user_id;
+          console.log('response.role_id : ', response.role_id)
+          console.log('res.locals.role_id: ', res.locals.role_id)
+          // res.locals.fullName = response.fullName;
+          // res.locals.contactNo = response.contactNo;
+          // res.locals.active = response.active;
+          // res.locals.sauthenticated = response.email ? true : false;
           next();
         }
       } else {
@@ -49,4 +53,3 @@ export const isAuthorize = async (req, res, next) => {
     }
   };
   
-    
