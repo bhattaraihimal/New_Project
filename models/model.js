@@ -7,43 +7,37 @@ import employeeSchema from "./schema/employeeSchema.js";
 import informationSchema from "./schema/informationSchema.js";
 import noticeSchema from "./schema/noticeSchema.js";
 import rolepermissonSchema from "./schema/rolepermissonSchema.js";
+import imageSchema from "./schema/utils/imageSchema.js";
 
-const Role = sequelize.define("role", roleSchema);
-const User = sequelize.define("user", userSchema);
-const Ads = sequelize.define("ads", adsSchema);
-const Employee = sequelize.define("employee", employeeSchema);
-const Information = sequelize.define("information", informationSchema);
-const Notice = sequelize.define("notice", noticeSchema);
-const RolePermission = sequelize.define("rolePermission", rolepermissonSchema);
-
-User.hasMany(Notice, { foreignKey: "userId" });
-Notice.belongsTo(User, { foreignKey: "userId" });
-
-User.hasMany(Ads, { foreignKey: "userId" });
-Ads.belongsTo(User, { foreignKey: "userId" });
-
-User.hasMany(Employee, { foreignKey: "userId" });
-Employee.belongsTo(User, { foreignKey: "userId" });
-
-User.hasMany(Information, { foreignKey: "userId" });
-Information.belongsTo(User, { foreignKey: "userId" });
-
-User.belongsTo(Role, { foreignKey: 'roleId' });
-Role.hasMany(User, { foreignKey: 'roleId' });
-
-Role.hasMany(RolePermission, { foreignKey: "roleId" });
-RolePermission.belongsTo(Role, { foreignKey: "roleId" });
-
-export { Role, User, Ads, Employee, Information, Notice, RolePermission };
+export const Role = sequelize.define("role", roleSchema);
+export const User = sequelize.define("user", userSchema);
+export const Ads = sequelize.define("ads", adsSchema);
+export const Employee = sequelize.define("employee", employeeSchema);
+export const Information = sequelize.define("information", informationSchema);
+export const Notice = sequelize.define("notice", noticeSchema);
+export const RolePermission = sequelize.define(
+  "rolePermission",
+  rolepermissonSchema
+);
+export const ImageCollection = sequelize.define("imageCollection", imageSchema);
 
 
+User.hasMany(Notice, { foreignKey: "user_id" });
+Notice.belongsTo(User, { foreignKey: "user_id" });
 
+User.hasMany(Ads, { foreignKey: "user_id" });
+Ads.belongsTo(User, { foreignKey: "user_id" });
 
+User.hasMany(Employee, { foreignKey: "user_id" });
+Employee.belongsTo(User, { foreignKey: "user_id" });
 
+User.hasMany(Information, { foreignKey: "user_id" });
+Information.belongsTo(User, { foreignKey: "user_id" });
 
+User.belongsTo(Role, { foreignKey: "role_id" });
+Role.hasMany(User, { foreignKey: "role_id" });
 
+Role.hasOne(RolePermission, { foreignKey: 'role_id' });
+RolePermission.belongsTo(Role, { foreignKey: 'role_id' });
 
- 
-
-
-
+// export { Role, User, Ads, Employee, Information, Notice, RolePermission };

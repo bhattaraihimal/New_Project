@@ -17,23 +17,84 @@ export const generateToken = async (objData) => {
   }
 };
 
+// export const verifyToken = async (token) => {
+//   try {
+//     let verifyTokenResponse = await jwt.verify(token, secretKey);
+//     console.log("verifyTokenResponse : ", verifyTokenResponse);
+//     let user = await userService.getUserByIdAndEmailService(verifyTokenResponse.user_id, verifyTokenResponse.email);
+//     if (user) {
+//       let latestTracker = user.passwordTracker;
+//       // check if the token is expired due to change in password
+//       if (latestTracker !== verifyTokenResponse.tracker) {
+//         return "NS101";
+//       } else {
+//         return verifyTokenResponse;
+//       }
+//     } else {
+//       return HttpStatus.NOTFOUND_404;
+//     }
+//   } catch (err) {
+//     return 400;
+//   }
+// };
+
+// export const verifyToken = async (token, attributes) => {
+//   try {
+//     let verifyTokenResponse = await jwt.verify(token, secretKey);
+//     console.log("verifyTokenResponse : ", verifyTokenResponse);
+    
+//     // Construct the query based on the provided attributes
+//     let user = await userService.getUserByAttributes(attributes);
+
+//     if (user) {
+//       let latestTracker = user.passwordTracker;
+//       // check if the token is expired due to change in password
+//       if (latestTracker !== verifyTokenResponse.tracker) {
+//         return "NS101";
+//       } else {
+//         return verifyTokenResponse;
+//       }
+//     } else {
+//       return HttpStatus.NOTFOUND_404;
+//     }
+//   } catch (err) {
+//     return 400;
+//   }
+// };
+
+// export const verifyToken = async (token) => {
+//     try {
+//       let verifyTokenResponse = await jwt.verify(token, secretKey);
+//       console.log("verifyTokenResponse : ", verifyTokenResponse);
+//       let user = await userService.getUserByIdService(verifyTokenResponse.user_id);
+//       if (user) {
+//           return verifyTokenResponse;
+//         }
+//        else {
+//         return HttpStatus.NOTFOUND_404;
+//       }
+//     } catch (err) {
+//       return 400;
+//     }
+//   };
+  
 export const verifyToken = async (token) => {
   try {
-    let verifyTokenResponse = await jwt.verify(token, secretKey);
-    console.log("verifyTokenResponse : ", verifyTokenResponse);
-    let user = await userService.getUserByEmailService(verifyTokenResponse.email);
+    const verifyTokenResponse = jwt.verify(token, secretKey);
+    console.log("verifyTokenResponse:", verifyTokenResponse);
+    
+    const user = await userService.getUserByIdService(verifyTokenResponse.user_id);
     if (user) {
-      let latestTracker = user.passwordTracker;
-      // check if the token is expired due to change in password
-      if (latestTracker !== verifyTokenResponse.tracker) {
-        return "NS101";
-      } else {
-        return verifyTokenResponse;
-      }
+      return verifyTokenResponse;
     } else {
-      return HttpStatus.NOTFOUND_404;
+      return { error: 'User not found', statusCode: HttpStatus.NOTFOUND_404 };
     }
   } catch (err) {
-    return 400;
+    if (err instanceof jwt.JsonWebTokenError) {
+      return { error: 'Invalid token', statusCode: HttpStatus.UNAUTHORIZED_401 };
+    } else {
+      console.error('Error verifying token:', err);
+      return { error: 'Internal server error', statusCode: HttpStatus.INTERNAL_SERVER_ERROR_500 };
+    }
   }
 };

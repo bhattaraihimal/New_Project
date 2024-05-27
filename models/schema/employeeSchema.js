@@ -1,6 +1,6 @@
 import { DataTypes } from "sequelize";
-import { User } from "../model.js";
-
+// import { User } from "../model.js";
+import userSchema from "./userSchema.js";
 
 const employeeSchema = {
   id: {
@@ -26,22 +26,18 @@ const employeeSchema = {
     allowNull: false,
   },
   profilePic: {
-    type: DataTypes.STRING, 
-    allowNull: true, 
+    type: DataTypes.STRING,
+    allowNull: true,
   },
-  user_id: { 
+  user_id: {
     type: DataTypes.INTEGER,
     references: {
-      model: (async () => {
-        const { User } = await import('../model.js');
-        return User;
-      })(), 
-      key: 'id',
+      model: userSchema,
+      key: "id",
     },
   },
 };
 
 //Employee.belongsTo(User);
-
 
 export default employeeSchema;

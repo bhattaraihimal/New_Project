@@ -1,5 +1,6 @@
 import { DataTypes } from "sequelize";
-import { Role } from "../model.js";
+// import { Role } from "../model.js";
+import roleSchema from "./roleSchema.js";
 
 const rolePermissionSchema = {
   id: {
@@ -8,14 +9,11 @@ const rolePermissionSchema = {
     allowNull: false,
     primaryKey: true,
   },
-  role_id: { 
+  role_id: {
     type: DataTypes.INTEGER,
     references: {
-      model: (async () => {
-        const { Role } = await import('../model.js');
-        return Role;
-      })(), 
-      key: 'id',
+      model: roleSchema,
+      key: "id",
     },
   },
   notice: {

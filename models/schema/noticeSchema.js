@@ -1,5 +1,6 @@
 import { DataTypes } from "sequelize";
-import { User } from "../model.js";
+// import { User } from "../model.js";
+import userSchema from "./userSchema.js";
 
 const noticeSchema = {
   id: {
@@ -20,16 +21,13 @@ const noticeSchema = {
   active: {
     type: DataTypes.BOOLEAN,
     allowNull: false,
-    defaultValue: true, 
+    defaultValue: true,
   },
-  user_id: { 
+  user_id: {
     type: DataTypes.INTEGER,
     references: {
-      model: (async () => {
-        const { User } = await import('../model.js');
-        return User;
-      })(), 
-      key: 'id',
+      model: userSchema,
+      key: "id",
     },
   },
 };
