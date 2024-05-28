@@ -14,6 +14,9 @@ export * as rolePermissionController from "./rolePermissionController.js";
 
 export * as uploadController from "./uploadController.js";
 
+export * as currencyController from "./currencyController.js";
+
+
 
 
 

@@ -7,6 +7,7 @@ import informationRouter from "./informationRoute.js";
 import roleRouter from "./roleRoute.js";
 import rolePermissionRouter from "./rolePermissionRoute.js";
 import uploadFilesRouter from "./utils/uploadFileRoute.js";
+import exchangeRouter from "./currencyExchangeRoute.js";
 
 
 const apiRouter = Router();
@@ -51,6 +52,7 @@ const routePath = [
         path: "/file",
         router: uploadFilesRouter,
     },
+
     
 ];
 
