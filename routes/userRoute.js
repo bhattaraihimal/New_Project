@@ -8,7 +8,7 @@ const userRouter = Router();
 
 userRouter.route("/register").post(userController.registerUser);
 
-userRouter.route("/login").post(isAuthorize, userController.loginUser);
+userRouter.route("/login").post(userController.loginUser);
 
 userRouter.route("/reset-password").post(isAuthorize, userController.updateUserPassword);
 

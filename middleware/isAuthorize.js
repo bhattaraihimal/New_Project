@@ -1,4 +1,3 @@
-import { secretKey } from "../config/config.js";
 import { HttpStatus } from "../config/httpStatusCodes.js";
 import { verifyToken } from "../utils/tokenController.js";
 
@@ -22,18 +21,17 @@ import { verifyToken } from "../utils/tokenController.js";
 export const isAuthorize = async (req, res, next) => {
     try {
       let { auth } = req.headers;
-      console.log('Auth : ', req.headers)
+      console.log('Auth : ', req.headers);
+
       if (auth) {
         let response = await verifyToken(auth);
-        if (response === 400) {
-          res
-            .status(HttpStatus.UNAUTHORIZED_401)
-            .json({ message: "Not allowed" });
-        } else if (response === "NS101") {
-          res
-            .status(HttpStatus.UNAUTHORIZED_401)
-            .json({ message: "Please login again" });
-        } else {
+        if (response.statusCode) {
+           // Token verification failed
+        res.status(response.statusCode).json({ message: response.error });
+      } else {
+
+                // Token verification succeeded
+
           res.locals.role_id = response.role_id;
           res.locals.user_id = response.user_id;
           console.log('response.role_id : ', response.role_id)
