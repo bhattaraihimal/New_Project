@@ -8,6 +8,8 @@ import informationSchema from "./schema/informationSchema.js";
 import noticeSchema from "./schema/noticeSchema.js";
 import rolepermissonSchema from "./schema/rolepermissonSchema.js";
 import imageSchema from "./schema/utils/imageSchema.js";
+import exchangeRates from "./schema/utils/exchangeRates.js";
+
 
 export const Role = sequelize.define("role", roleSchema);
 export const User = sequelize.define("user", userSchema);
@@ -20,6 +22,8 @@ export const RolePermission = sequelize.define(
   rolepermissonSchema
 );
 export const ImageCollection = sequelize.define("imageCollection", imageSchema);
+
+export const ExchangeRates = sequelize.define("exchangeRates", exchangeRates)
 
 
 User.hasMany(Notice, { foreignKey: "user_id" });
