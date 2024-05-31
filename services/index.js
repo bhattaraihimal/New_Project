@@ -14,6 +14,14 @@ export * as rolePermissionService from "./rolePermissionService.js";
 
 export * as exchangeRateService from "./exchangeRateService.js";
 
+export * as productService from "./productService.js";
+
+export * as orderService from "./orderService.js";
+
+export * as userProductStatusService from "./userProductStatusService.js";
+
+
+
 
 
 

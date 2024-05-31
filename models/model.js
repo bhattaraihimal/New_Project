@@ -9,6 +9,9 @@ import noticeSchema from "./schema/noticeSchema.js";
 import rolepermissonSchema from "./schema/rolepermissonSchema.js";
 import imageSchema from "./schema/utils/imageSchema.js";
 import exchangeRates from "./schema/utils/exchangeRates.js";
+import productSchema from "./schema/productSchema.js";
+import orderSchema from "./schema/orderSchema.js";
+import userProductStatusSchema from "./schema/userProductStatusSchema.js";
 
 
 export const Role = sequelize.define("role", roleSchema);
@@ -23,7 +26,13 @@ export const RolePermission = sequelize.define(
 );
 export const ImageCollection = sequelize.define("imageCollection", imageSchema);
 
-export const ExchangeRates = sequelize.define("exchangeRates", exchangeRates)
+export const ExchangeRates = sequelize.define("exchangeRates", exchangeRates);
+
+export const Product = sequelize.define("product", productSchema);
+export const Order = sequelize.define("order", orderSchema);
+export const UserProductStatus = sequelize.define("userProductStatus", userProductStatusSchema);
+
+
 
 
 User.hasMany(Notice, { foreignKey: "user_id" });
@@ -43,5 +52,21 @@ Role.hasMany(User, { foreignKey: "role_id" });
 
 Role.hasOne(RolePermission, { foreignKey: 'role_id' });
 RolePermission.belongsTo(Role, { foreignKey: 'role_id' });
+
+Product.hasMany(Order, { foreignKey: "product_id"});
+Order.belongsTo(Product, { foreignKey: "product_id"});
+
+Product.hasMany(UserProductStatus, { foreignKey: "product_id"});
+UserProductStatus.belongsTo(Product, { foreignKey: "product_id"});
+
+User.hasMany(Order, { foreignKey: "user_id" });
+Order.belongsTo(User, { foreignKey: "user_id" });
+
+User.hasMany(UserProductStatus, { foreignKey: "user_id" });
+UserProductStatus.belongsTo(User, { foreignKey: "user_id" });
+
+
+
+
 
 // export { Role, User, Ads, Employee, Information, Notice, RolePermission };
