@@ -16,6 +16,14 @@ export * as uploadController from "./uploadController.js";
 
 export * as currencyController from "./currencyController.js";
 
+export * as productController from "./productController.js";
+
+export * as orderController from "./orderController.js";
+
+export * as userProductStatusController from "./userProductStatusController.js";
+
+
+
 
 
 

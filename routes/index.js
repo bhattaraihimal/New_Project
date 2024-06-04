@@ -8,6 +8,11 @@ import roleRouter from "./roleRoute.js";
 import rolePermissionRouter from "./rolePermissionRoute.js";
 import uploadFilesRouter from "./utils/uploadFileRoute.js";
 import exchangeRouter from "./currencyRoute.js";
+import productRouter from "./productRoute.js";
+import orderRouter from "./orderRoute.js";
+import userProductStatusRouter from "./userProductStatusRoute.js";
+
+
 
 
 const apiRouter = Router();
@@ -57,6 +62,23 @@ const routePath = [
         path: "/currency",
         router: exchangeRouter,
     },
+
+    {
+        path: "/product",
+        router: productRouter,
+    },
+
+    {
+        path: "/order",
+        router: orderRouter,
+    },
+
+    {
+        path: "/productStatus",
+        router: userProductStatusRouter,
+    },
+
+
 
     
 ];

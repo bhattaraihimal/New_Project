@@ -58,7 +58,7 @@ export const registerUser = async (req, res, next) => {
         
         // Check if required fields are provided
         if (!email || !fullName || !password || !contactNo || !post || !role_id ) {
-            return res.status(400).json({ error: 'Please provide all the required information' });
+            return res.status(HttpStatus.BAD_REQUEST_400).json({ error: 'Please provide all the required information' });
         }
 
         // Check if user with the provided email already exists
