@@ -8,11 +8,15 @@ const noticeRouter = Router();
 
 noticeRouter.route("/create").post(isAuthorize, noticeController.createNotice);
 
-noticeRouter.route("/viewAll").get(isAuthorize, noticeController.viewAllNotices);
+noticeRouter.route("/viewAll").get(noticeController.viewAllNotices);
 
 noticeRouter.route("/view/:id").get(isAuthorize, noticeController.viewNotice);
 
+noticeRouter.route("/viewUser").get(isAuthorize, noticeController.viewUserNotices)
+
 noticeRouter.route("/update/:id").patch(isAuthorize, noticeController.updateNotice);
+
+// noticeRouter.route("/updateUser/:id").patch(isAuthorize, noticeController.updateUserNotice)
 
 noticeRouter.route("/delete/:id").delete(isAuthorize, noticeController.deleteNotice);
 

@@ -3,15 +3,15 @@ import { rolePermissionService } from "../services/index.js";
 
 export const createRolePermission = async (req, res, next) => {
     try {
-      const { role_id, notice, ads, information, employee  } = req.body;
+      const { role_id, notice, ads, information, employee, product_create, product_viewAll, product_view, product_update, product_delete, product_deleteAll, order_create, order_viewAll, order_view, order_update, order_delete, order_deleteAll, productStatus_viewAll, productStatus_view, productStatus_delete, productStatus_deleteAll  } = req.body;
   
-      // Check if required fields are provided
-      if (!role_id || !notice || !ads || !information || !employee) {
-        return res.status(HttpStatus.BAD_REQUEST_400).json({ error: 'Please provide all the required information' });
-      }
+      // // Check if required fields are provided
+      // if (!role_id || !notice || !ads || !information || !employee) {
+      //   return res.status(HttpStatus.BAD_REQUEST_400).json({ error: 'Please provide all the required information' });
+      // }
   
       // Create new rolePermission
-      const rolePermission = await rolePermissionService.createRolePermissionService({ role_id, notice, ads, information, employee });
+      const rolePermission = await rolePermissionService.createRolePermissionService({ role_id, notice, ads, information, employee, product_create, product_viewAll, product_view, product_update, product_delete, product_deleteAll, order_create, order_viewAll, order_view, order_update, order_delete, order_deleteAll, productStatus_viewAll, productStatus_view, productStatus_delete, productStatus_deleteAll });
       res.json({ message: 'Role Permission created successfully'});
     } catch (error) {
       console.error('Error creating role permission:', error);
@@ -77,7 +77,7 @@ export const viewRolePermission = async (req, res, next) => {
 export const updateRolePermission = async (req, res, next) => {
   try {
       const { id } = req.params;
-      const { notice, ads, information, employee } = req.body;
+      const { notice, ads, information, employee, product_create, product_viewAll, product_view, product_update, product_delete, product_deleteAll, order_create, order_viewAll, order_view, order_update, order_delete, order_deleteAll, productStatus_viewAll, productStatus_view, productStatus_delete, productStatus_deleteAll } = req.body;
 
       // Find role permission by id
       const rolePermission = await rolePermissionService.getRolePermissionByIdServiceonly(id);
@@ -86,7 +86,7 @@ export const updateRolePermission = async (req, res, next) => {
       }
 
       // Prepare data to send for updating
-      const dataToUpdate = { notice, ads, information, employee };
+      const dataToUpdate = { notice, ads, information, employee, product_create, product_viewAll, product_view, product_update, product_delete, product_deleteAll, order_create, order_viewAll, order_view, order_update, order_delete, order_deleteAll, productStatus_viewAll, productStatus_view, productStatus_delete, productStatus_deleteAll };
 
       // Update role permission using updateRolePermissionService
       let response = await rolePermissionService.updateRolePermissionService(id, dataToUpdate);

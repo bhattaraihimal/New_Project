@@ -47,12 +47,12 @@ import { rolePermissionService, roleService } from "../services/index.js";
 export const createRole = async (req, res, next) => {
   
   try {
-    const { title, notice, ads, information, employee } = req.body;
+    const { title, notice, ads, information, employee, product_create, product_viewAll, product_view, product_update, product_delete, product_deleteAll, order_create, order_viewAll, order_view, order_update, order_delete, order_deleteAll, productStatus_viewAll, productStatus_view, productStatus_delete, productStatus_deleteAll } = req.body;
 
     // Check if required fields are provided
-    if (!title || !notice || !ads || !information || !employee) {
-      return res.status(HttpStatus.BAD_REQUEST_400).json({ error: 'Please provide all the required information' });
-    }
+    // if (!title || !notice || !ads || !information || !employee) {
+    //   return res.status(HttpStatus.BAD_REQUEST_400).json({ error: 'Please provide all the required information' });
+    // }
 
     // Create new role
     const role = await roleService.createRoleService({ title });
@@ -68,7 +68,7 @@ export const createRole = async (req, res, next) => {
       notice,
       ads,
       information,
-      employee
+      employee, product_create, product_viewAll, product_view, product_update, product_delete, product_deleteAll, order_create, order_viewAll, order_view, order_update, order_delete, order_deleteAll, productStatus_viewAll, productStatus_view, productStatus_delete, productStatus_deleteAll
     });
 
     // Check if role permission creation was successful

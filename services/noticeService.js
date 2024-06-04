@@ -30,3 +30,10 @@ export const deleteAllNoticeService = async () => {
       truncate: true
     });
   };
+
+export const getNoticesByUserIdService = async (user_id) => {
+    return Notice.findAll({
+      where: { user_id: user_id }
+    });
+  };
+  
