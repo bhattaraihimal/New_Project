@@ -91,6 +91,60 @@ try {
 }
 };
 
+// export const updateOrder = async (req, res, next) => {
+//   const role_id =  res.locals.role_id
+
+// try {
+//     const { id } = req.params;
+//     const { paid, active } = req.body;
+
+//     // Check if the user has the required permission
+//     const hasPermission = await rolePermissionService.getRolePermissionByIdService({ role_id, requiredPermission: 'order_update' });
+//     if (!hasPermission) {
+//         return res.status(HttpStatus.FORBIDDEN_403).json({ error: 'You do not have permission to update this order' });
+//     }
+
+//     // Find order by id
+//     const order = await orderService.getOrderByIdService(id);
+//     if (!order) {
+//         return res.status(HttpStatus.NOTFOUND_404).json({ error: 'Order not found' });
+//     }
+
+//     // Prepare data to send for updating
+//     const dataToUpdate = { paid, active };
+
+//     // Update order using updateOrderService
+//     let response = await orderService.updateOrderService(id, dataToUpdate);
+
+//     if(!response[0] > 0){
+//       return res.status(HttpStatus.BAD_REQUEST_400).json({error: 'Failed to update Order'});
+//     }
+
+//     // Update UserProductStatus
+
+//     // Find User Product Status by id
+//     const userProductStatus = await userProductStatusService.getUserProductStatusByIdService(id);
+//     if (!userProductStatus) {
+//         return res.status(HttpStatus.NOTFOUND_404).json({ error: 'User Product Status not found' });
+//     }
+
+//     // Prepare data to send for updating
+//     const statusdataToUpdate = { active };
+
+//     let statusresponse = await userProductStatusService.updateUserProductStatusService(id, statusdataToUpdate);
+
+//     // check is userProductStatus updation was successful
+//     if(!statusresponse){
+//       return res.status(HttpStatus.BAD_REQUEST_400).json({ error: 'Failed to update User Product Status'});
+//         }
+
+//         res.status(HttpStatus.SUCCESS_200).json({ message: 'Order and User Product Status updated successfully' });
+//     } 
+//  catch (error) {
+//     console.error('Error updating order and User Product Status:', error);
+//     res.status(HttpStatus.INTERNAL_SERVER_ERROR_500).json({ error: 'Internal server error' });
+// }
+// };
 
 export const updateOrder = async (req, res, next) => {
   const role_id = res.locals.role_id;

@@ -7,8 +7,47 @@ import { comparePassword, hashPassword } from "../utils/hashFunction.js";
 import { generateToken, verifyToken } from "../utils/tokenController.js";
 
 
+// export const verifyUserToken = async (req, res, next) => {
+//     const token = req.headers.authorization;
 
+//     if (!token) {
+//         return res.status(HttpStatus.UNAUTHORIZED_401).json({ error: 'Unauthorized' });
+//     }
 
+//     try {
+//         const decoded = jwt.verifyToken(token);
+//         req.user = decoded;
+//         next();
+//     } catch (error) {
+//         return res.status(HttpStatus.UNAUTHORIZED_401).json({ error: 'Invalid token' });
+//     }
+// };
+
+// export const verifyUserToken = async (req, res, next) => {
+//   try {
+//     let { at } = req.headers;
+//     if (at) {
+//       let response = await verifyToken(at);
+//       if (response === 400) {
+//         res
+//           .status(HttpStatus.UNAUTHORIZED_401)
+//           .json({ message: "Not allowed" });
+//       } else {
+//         res.locals.sauthenticated = response.email ? true : false;
+//         res.locals.email = response.email;
+//         res.locals.fullname = response.fullname;
+//         res.locals.contactNo = response.contactNo;
+//         res.locals.active = response.active;
+//         res.status(HttpStatus.SUCCESS_200).json({ token: response });
+//       }
+//     } else {
+//       res.status(HttpStatus.UNAUTHORIZED_401).json({ message: "Not allowed" });
+//     }
+//   } catch (err) {
+//     console.log("err : ", err);
+//     res.status(HttpStatus.BAD_REQUEST_400).json(err);
+//   }
+// };
 
 
 export const registerUser = async (req, res, next) => {
@@ -146,7 +185,33 @@ export const updateUserPasswordValidation = async (req, res,next) => {
 };
 
 
-
+// export const updateUser = async (req, res, next) => {
+//     try {
+//       const { id } = req.params;
+//       const { email, fullName, password, contactNo, post, active, role_id } = req.body;
+  
+//       // Find user by id
+//       const user = await userService.getUserByIdService(id);
+//       if (!user) {
+//         return res.status(HttpStatus.NOTFOUND_404).json({ error: 'User not found' });
+//       }
+  
+//       // Update User
+//       user.email = email;
+//       user.fullName = fullName;
+//       user.password = password;
+//       user.contactNo = contactNo;
+//       user.post = post;
+//       user.active = active;
+//       user.role_id = role_id;
+//       await user.save();
+  
+//       res.json({ message: 'User updated successfully'});
+//     } catch (error) {
+//       console.error('Error updating user:', error);
+//       res.status(HttpStatus.INTERNAL_SERVER_ERROR_500).json({ error: 'Internal server error' });
+//     }
+//   };
 
 export const updateUser = async (req, res, next) => {
   try {
