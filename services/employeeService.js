@@ -30,3 +30,9 @@ export const deleteAllEmployeeService = async () => {
       truncate: true
     });
   };
+
+export const getEmployeeByUserIdService = async (user_id) => {
+    return Employee.findAll({
+      where: { user_id: user_id }
+    });
+  };

@@ -1,9 +1,6 @@
 import { HttpStatus } from "../config/httpStatusCodes.js";
 import { noticeService, rolePermissionService, roleService } from "../services/index.js";
 
-
-
-
 export const createNotice = async (req, res, next) => {
     const role_id =  res.locals.role_id
   const user_id = res.locals.user_id
@@ -14,11 +11,6 @@ export const createNotice = async (req, res, next) => {
     if (!title) {
       return res.status(HttpStatus.BAD_REQUEST_400).json({ error: 'Please provide all the required information' });
     }
-
-    
-
-   
-
 
     const hasPermission = await rolePermissionService.getRolePermissionByIdService({ role_id, requiredPermission: 'notice' });
 
@@ -96,9 +88,6 @@ export const viewUserNotices = async (req, res, next) => {
     res.status(HttpStatus.INTERNAL_SERVER_ERROR_500).json({ error: 'Internal server error' });
   }
 };
-
-
-
 
 export const updateNotice = async (req, res, next) => {
   const role_id = res.locals.role_id;

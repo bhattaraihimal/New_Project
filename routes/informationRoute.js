@@ -8,9 +8,12 @@ const informationRouter = Router();
 
 informationRouter.route("/create").post(isAuthorize, informationController.createInformation);
 
-informationRouter.route("/viewAll").get(isAuthorize, informationController.viewAllInformation);
+informationRouter.route("/viewAll").get(informationController.viewAllInformation);
 
 informationRouter.route("/view/:id").get(isAuthorize, informationController.viewInformation);
+
+informationRouter.route("/viewUser").get(isAuthorize, informationController.viewUserInformations);
+
 
 informationRouter.route("/update/:id").patch(isAuthorize, informationController.updateInformation);
 
