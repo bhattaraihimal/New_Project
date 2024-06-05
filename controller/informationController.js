@@ -1,5 +1,5 @@
 import { HttpStatus } from "../config/httpStatusCodes.js";
-import { informationService, rolePermissionService } from "../services/index.js";
+import { informationService, rolePermissionService, roleService } from "../services/index.js";
 
 export const createInformation = async (req, res, next) => {
   const role_id =  res.locals.role_id
@@ -37,12 +37,7 @@ export const viewAllInformation = async (req, res, next) => {
 
   try {
     
-    // Check if the user has the required permission
-    const hasPermission = await rolePermissionService.getRolePermissionByIdService({ role_id, requiredPermission: 'information' });
-    if (!hasPermission) {
-      return res.status(HttpStatus.FORBIDDEN_403).json({ error: 'You do not have permission to view all information' });
-    }
-
+    
     const informations = await informationService.getAllInformationService();
     res.json({ informations });
   } catch (error) {
@@ -79,12 +74,30 @@ export const viewInformation = async (req, res, next) => {
   }
 };
 
+export const viewUserInformations = async (req, res, next) => {
+  const role_id = res.locals.role_id;
+  const user_id = res.locals.user_id; 
 
+  try {
+    // Check if the user has the required permission
+    const hasPermission = await rolePermissionService.getRolePermissionByIdService({ role_id, requiredPermission: 'notice' });
+    if (!hasPermission) {
+      return res.status(HttpStatus.FORBIDDEN_403).json({ error: 'You do not have permission to view notices' });
+    }
 
-
+    // Fetch and return all informations created by the current user
+    const informations = await informationService.getInformationsByUserIdService(user_id);
+    res.json({ informations });
+  } catch (error) {
+    console.error('Error viewing user informations:', error);
+    res.status(HttpStatus.INTERNAL_SERVER_ERROR_500).json({ error: 'Internal server error' });
+  }
+};
 
 export const updateInformation = async (req, res, next) => {
   const role_id =  res.locals.role_id
+  const user_id = res.locals.user_id;
+
 
   try {
     const { id } = req.params;
@@ -102,6 +115,13 @@ export const updateInformation = async (req, res, next) => {
     if (!information) {
       return res.status(HttpStatus.NOTFOUND_404).json({ error: 'Information not found' });
     }
+
+    // Check if the user is a 'Super Admin' or if the information was created by the current user
+    const userRole = await roleService.getRoleByIdService(role_id);
+    if (userRole.title !== 'Super Admin' && information.user_id !== user_id) {
+      return res.status(HttpStatus.FORBIDDEN_403).json({ error: 'Why are you trying to update others information ??  You can not do that !!!' });
+    }
+
 
     // Prepare data to send for updating
     const dataToUpdate = { title, description, post, type, content };
@@ -124,6 +144,8 @@ export const updateInformation = async (req, res, next) => {
 
 export const deleteInformation = async (req, res, next) => {
   const role_id =  res.locals.role_id
+  const user_id = res.locals.user_id;
+
 
   try {
     const { id } = req.params;
@@ -142,6 +164,13 @@ export const deleteInformation = async (req, res, next) => {
       return res.status(HttpStatus.NOTFOUND_404).json({ error: 'Information not found' });
     }
 
+     // Check if the user is a 'Super Admin' or if the information was created by the current user
+     const userRole = await roleService.getRoleByIdService(role_id);
+     if (userRole.title!== 'Super Admin' && information.user_id!== user_id) {
+       return res.status(HttpStatus.FORBIDDEN_403).json({ error: 'Why are you trying to delete others information. You can only delete information that you have created !!!' });
+     }
+ 
+
     // Delete information
     await informationService.deleteInformationByIdService(id);
 
@@ -155,6 +184,8 @@ export const deleteInformation = async (req, res, next) => {
 
 export const deleteAllInformation = async (req, res) => {
   const role_id =  res.locals.role_id
+  const user_id = res.locals.user_id;
+
 
   try {
    
@@ -168,6 +199,11 @@ export const deleteAllInformation = async (req, res) => {
     // Find all information and delete them
     const informations = await informationService.getAllInformationService();
     for (const information of informations) {
+      const userRole = await roleService.getRoleByIdService(role_id);
+        if (userRole.title !== 'Super Admin' && information.user_id !== user_id) {
+          continue;
+        }
+
       await informationService.deleteInformationByIdService(information.id);
     }
 

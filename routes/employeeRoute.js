@@ -7,9 +7,11 @@ const employeeRouter = Router();
 
 employeeRouter.route("/create").post(isAuthorize, upload.single('images'), employeeController.createEmployee);
 
-employeeRouter.route("/viewAll").get(isAuthorize, employeeController.viewAllEmployee);
+employeeRouter.route("/viewAll").get(employeeController.viewAllEmployee);
 
 employeeRouter.route("/view/:id").get(isAuthorize, employeeController.viewEmployee);
+
+employeeRouter.route("/viewUser").get(isAuthorize, employeeController.viewUserEmployee);
 
 employeeRouter.route("/update/:id").patch(isAuthorize, upload.single('images'), employeeController.updateEmployee);
 

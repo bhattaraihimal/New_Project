@@ -7,9 +7,11 @@ const adsRouter = Router();
 
 adsRouter.route("/create").post(isAuthorize, upload.single("images"), adsController.createAd);
 
-adsRouter.route("/viewAll").get(isAuthorize, adsController.viewAllAds);
+adsRouter.route("/viewAll").get(adsController.viewAllAds);
 
 adsRouter.route("/view/:id").get(isAuthorize, adsController.viewAd);
+
+adsRouter.route("/viewUser").get(isAuthorize, adsController.viewUserAds);
 
 adsRouter.route("/update/:id").patch(isAuthorize, upload.single("images"), adsController.updateAd);
 

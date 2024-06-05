@@ -1,5 +1,5 @@
 import { HttpStatus } from "../config/httpStatusCodes.js";
-import { adsService, rolePermissionService } from "../services/index.js";
+import { adsService, rolePermissionService, roleService } from "../services/index.js";
 import cloudinary from "../utils/cloudinary.js";
 
 
@@ -14,9 +14,7 @@ export const createAd = async (req, res, next) => {
       if (!title || !req.file) {
           return res.status(HttpStatus.BAD_REQUEST_400).json({ error: 'Please provide all the required information' });
       }
-
-    
-
+   
       // Check if the user has the required permission
       const hasPermission = await rolePermissionService.getRolePermissionByIdService({ role_id, requiredPermission: 'ads' });
       if (!hasPermission) {
@@ -26,9 +24,7 @@ export const createAd = async (req, res, next) => {
         // Upload the image to Cloudinary
     const uploadResult = await cloudinary.uploader.upload(req.file.path);
     const imageUrl = uploadResult.secure_url;
-     
-     
-     
+            
 
       // Create new ad
       const ad = await adsService.createAdService({ title, imageUrl: imageUrl, user_id: user_id });
@@ -45,14 +41,7 @@ export const viewAllAds = async (req, res, next) => {
   const role_id =  res.locals.role_id
 
   try {
-     
-
-      // Check if the user has the required permission
-      const hasPermission = await rolePermissionService.getRolePermissionByIdService({ role_id, requiredPermission: 'ads' });
-      if (!hasPermission) {
-          return res.status(HttpStatus.FORBIDDEN_403).json({ error: 'You do not have permission to view ads' });
-      }
-
+         
       // Retrieve all ads
       const ads = await adsService.getAllAdsService();
       res.json({ ads });
@@ -90,12 +79,29 @@ export const viewAd = async (req, res, next) => {
   }
 };
 
+export const viewUserAds = async (req, res, next) => {
+  const role_id = res.locals.role_id;
+  const user_id = res.locals.user_id; 
 
+  try {
+    // Check if the user has the required permission
+    const hasPermission = await rolePermissionService.getRolePermissionByIdService({ role_id, requiredPermission: 'ads' });
+    if (!hasPermission) {
+      return res.status(HttpStatus.FORBIDDEN_403).json({ error: 'You do not have permission to view ads' });
+    }
 
-
+    // Fetch and return all ads created by the current user
+    const adss = await adsService.getAdsByUserIdService(user_id);
+    res.json({ adss });
+  } catch (error) {
+    console.error('Error viewing user ads:', error);
+    res.status(HttpStatus.INTERNAL_SERVER_ERROR_500).json({ error: 'Internal server error' });
+  }
+};
 
 export const updateAd = async (req, res, next) => {
   const role_id =  res.locals.role_id
+  const user_id = res.locals.user_id;
 
   try {
     const { id } = req.params;
@@ -111,8 +117,15 @@ export const updateAd = async (req, res, next) => {
     // Find ad by id
     const ad = await adsService.getAdByIdService(id);
     if (!ad) {
-      return res.status(HttpStatus.NOT_FOUND_404).json({ error: 'Ad not found' });
+      return res.status(HttpStatus.NOTFOUND_404).json({ error: 'Ad not found' });
     }
+
+    // Check if the user is a 'Super Admin' or if the ad was created by the current user
+    const userRole = await roleService.getRoleByIdService(role_id);
+    if (userRole.title !== 'Super Admin' && ad.user_id !== user_id) {
+      return res.status(HttpStatus.FORBIDDEN_403).json({ error: 'Why are you trying to update others ads ??  You can not do that !!!' });
+    }
+
 
     // Prepare data to send for updating
     const dataToUpdate = { title };
@@ -142,6 +155,7 @@ export const updateAd = async (req, res, next) => {
 
 export const deleteAd = async (req, res, next) => {
   const role_id =  res.locals.role_id
+  const user_id = res.locals.user_id;
 
   try {
     const { id } = req.params;
@@ -159,6 +173,12 @@ export const deleteAd = async (req, res, next) => {
       return res.status(HttpStatus.NOT_FOUND_404).json({ error: 'Ad not found' });
     }
 
+    // Check if the user is a 'Super Admin' or if the ad was created by the current user
+    const userRole = await roleService.getRoleByIdService(role_id);
+    if (userRole.title!== 'Super Admin' && ad.user_id!== user_id) {
+      return res.status(HttpStatus.FORBIDDEN_403).json({ error: 'Why are you trying to delete others ads. You can only delete ads that you have created !!!' });
+    }
+
     // Delete ad
     await adsService.deleteAdByIdService(id);
 
@@ -173,6 +193,7 @@ export const deleteAd = async (req, res, next) => {
 
 export const deleteAllAds = async (req, res) => {
   const role_id =  res.locals.role_id
+  const user_id = res.locals.user_id;
 
   try {
     
@@ -185,6 +206,11 @@ export const deleteAllAds = async (req, res) => {
     // Find all ads and delete them
     const ads = await adsService.getAllAdsService();
     for (const ad of ads) {
+      const userRole = await roleService.getRoleByIdService(role_id);
+        if (userRole.title !== 'Super Admin' && ad.user_id !== user_id) {
+          continue;
+        }
+
       await adsService.deleteAdByIdService(ad.id);
     }
 

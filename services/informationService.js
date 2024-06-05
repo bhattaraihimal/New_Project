@@ -30,3 +30,10 @@ export const deleteAllInformationService = async () => {
       truncate: true
     });
   };
+
+export const getInformationsByUserIdService = async (user_id) => {
+    return Information.findAll({
+      where: { user_id: user_id }
+    });
+  };
+

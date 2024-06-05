@@ -1,5 +1,5 @@
 import { HttpStatus } from "../config/httpStatusCodes.js";
-import { employeeService, rolePermissionService } from "../services/index.js";
+import { employeeService, rolePermissionService, roleService } from "../services/index.js";
 import cloudinary from "../utils/cloudinary.js";
 
 
@@ -45,12 +45,7 @@ export const viewAllEmployee = async (req, res, next) => {
 
   try {
     
-    // Check if the user has the required permission
-    const hasPermission = await rolePermissionService.getRolePermissionByIdService({ role_id, requiredPermission: 'employee' });
-    if (!hasPermission) {
-      return res.status(HttpStatus.FORBIDDEN_403).json({ error: 'You do not have permission to view employees' });
-    }
-
+    
     // Fetch all employees
     const employees = await employeeService.getAllEmployeeService();
     res.json({ employees });
@@ -87,9 +82,32 @@ export const viewEmployee = async (req, res, next) => {
   }
 };
 
+export const viewUserEmployee = async (req, res, next) => {
+  const role_id = res.locals.role_id;
+  const user_id = res.locals.user_id; 
+
+  try {
+    // Check if the user has the required permission
+    const hasPermission = await rolePermissionService.getRolePermissionByIdService({ role_id, requiredPermission: 'ads' });
+    if (!hasPermission) {
+      return res.status(HttpStatus.FORBIDDEN_403).json({ error: 'You do not have permission to view ads' });
+    }
+
+    // Fetch and return all ads created by the current user
+    const employees = await employeeService.getEmployeeByUserIdService(user_id);
+    res.json({ employees });
+  } catch (error) {
+    console.error('Error viewing employees:', error);
+    res.status(HttpStatus.INTERNAL_SERVER_ERROR_500).json({ error: 'Internal server error' });
+  }
+};
+
+
 
 export const updateEmployee = async (req, res, next) => {
   const role_id =  res.locals.role_id
+  const user_id = res.locals.user_id;
+
 
   try {
     const { id } = req.params;
@@ -107,6 +125,13 @@ export const updateEmployee = async (req, res, next) => {
     if (!employee) {
       return res.status(HttpStatus.NOTFOUND_404).json({ error: 'Employee not found' });
     }
+
+    // Check if the user is a 'Super Admin' or if the ad was created by the current user
+    const userRole = await roleService.getRoleByIdService(role_id);
+    if (userRole.title !== 'Super Admin' && employee.user_id !== user_id) {
+      return res.status(HttpStatus.FORBIDDEN_403).json({ error: 'Why are you trying to update others employee ??  You can not do that !!!' });
+    }
+
 
     // Prepare data to send for updating
     const dataToUpdate = { name, contactNo, post, email };
@@ -135,6 +160,8 @@ export const updateEmployee = async (req, res, next) => {
 
 export const deleteEmployee = async (req, res, next) => {
   const role_id =  res.locals.role_id
+  const user_id = res.locals.user_id;
+
 
   try {
     const { id } = req.params;
@@ -152,6 +179,13 @@ export const deleteEmployee = async (req, res, next) => {
       return res.status(HttpStatus.NOTFOUND_404).json({ error: 'Employee not found' });
     }
 
+    // Check if the user is a 'Super Admin' or if the employee was created by the current user
+    const userRole = await roleService.getRoleByIdService(role_id);
+    if (userRole.title!== 'Super Admin' && employee.user_id!== user_id) {
+      return res.status(HttpStatus.FORBIDDEN_403).json({ error: 'Why are you trying to delete others employee. You can only delete employee that you have created !!!' });
+    }
+
+
     // Delete employee
     await employeeService.deleteEmployeeByIdService(id);
 
@@ -165,6 +199,8 @@ export const deleteEmployee = async (req, res, next) => {
 
 export const deleteAllEmployee = async (req, res) => {
   const role_id =  res.locals.role_id
+  const user_id = res.locals.user_id;
+
 
   try {
     
@@ -177,6 +213,11 @@ export const deleteAllEmployee = async (req, res) => {
     // Find all employees and delete them
     const employees = await employeeService.getAllEmployeeService();
     for (const employee of employees) {
+      const userRole = await roleService.getRoleByIdService(role_id);
+      if (userRole.title !== 'Super Admin' && employee.user_id !== user_id) {
+        continue;
+      }
+
       await employeeService.deleteEmployeeByIdService(employee.id);
     }
 

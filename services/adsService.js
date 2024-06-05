@@ -30,3 +30,10 @@ export const deleteAllAdsService = async () => {
       truncate: true
     });
   };
+
+export const getAdsByUserIdService = async (user_id) => {
+    return Ads.findAll({
+      where: { user_id: user_id }
+    });
+  };
+
