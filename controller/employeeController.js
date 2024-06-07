@@ -25,9 +25,9 @@ export const createEmployee = async (req, res, next) => {
       return res.status(HttpStatus.FORBIDDEN_403).json({ error: 'You do not have permission to create an employee' });
     }
 
-    let profilePic = req.body.profilePic
+    let profilePic = req.body.images
 
-    if(req.file.path){
+    if(req.file && req.file.path){
       // Upload profile picture to Cloudinary
       const uploadResult = await cloudinary.uploader.upload(req.file.path);
       profilePic = uploadResult.secure_url;

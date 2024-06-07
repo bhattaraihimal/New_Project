@@ -11,9 +11,9 @@ export const createAd = async (req, res, next) => {
       const { title } = req.body;
 
       // Check if required fields are provided
-      if (!title || !req.file) {
-          return res.status(HttpStatus.BAD_REQUEST_400).json({ error: 'Please provide all the required information' });
-      }
+      // if (!title || !req.file) {
+      //     return res.status(HttpStatus.BAD_REQUEST_400).json({ error: 'Please provide all the required information' });
+      // }
    
       // Check if the user has the required permission
       const hasPermission = await rolePermissionService.getRolePermissionByIdService({ role_id, requiredPermission: 'ads' });
@@ -21,9 +21,11 @@ export const createAd = async (req, res, next) => {
           return res.status(HttpStatus.FORBIDDEN_403).json({ error: 'You do not have permission to create an ad' });
       }
 
-      let imageUrl = req.body.imageUrl
+      let imageUrl = req.body.images
 
-      if(req.file.path){
+      console.log('imageUrl : ', imageUrl)
+
+      if(req.file && req.file.path){
         // Upload the image to Cloudinary
         const uploadResult = await cloudinary.uploader.upload(req.file.path);
         imageUrl = uploadResult.secure_url;
