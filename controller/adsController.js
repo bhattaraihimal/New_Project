@@ -23,8 +23,6 @@ export const createAd = async (req, res, next) => {
 
       let imageUrl = req.body.images
 
-      console.log('imageUrl : ', imageUrl)
-
       if(req.file && req.file.path){
         // Upload the image to Cloudinary
         const uploadResult = await cloudinary.uploader.upload(req.file.path);
@@ -112,7 +110,7 @@ export const updateAd = async (req, res, next) => {
 
   try {
     const { id } = req.params;
-    const { title } = req.body;
+    const { title, images } = req.body;
 
    
     // Check if the user has the required permission
@@ -135,7 +133,7 @@ export const updateAd = async (req, res, next) => {
 
 
     // Prepare data to send for updating
-    const dataToUpdate = { title };
+    const dataToUpdate = { title,imageUrl : images };
 
      // Handle image upload if a file is provided
      if (req.file) {

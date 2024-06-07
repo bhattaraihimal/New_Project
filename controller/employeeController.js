@@ -13,7 +13,7 @@ export const createEmployee = async (req, res, next) => {
     const { name, contactNo, post, email} = req.body;
 
     // Check if required fields are provided
-    if (!name || !contactNo || !post || !email || !req.file) {
+    if (!name || !contactNo || !post || !email ) {
       return res.status(HttpStatus.BAD_REQUEST_400).json({ error: 'Please provide all the required information' });
     }
 
@@ -116,7 +116,7 @@ export const updateEmployee = async (req, res, next) => {
 
   try {
     const { id } = req.params;
-    const { name, contactNo, post, email} = req.body;
+    const { name, contactNo, post, email, images} = req.body;
 
     
     // Check if the user has the required permission
@@ -139,7 +139,7 @@ export const updateEmployee = async (req, res, next) => {
 
 
     // Prepare data to send for updating
-    const dataToUpdate = { name, contactNo, post, email };
+    const dataToUpdate = { name, contactNo, post, email, profilePic: images };
 
      // If a new profile picture is uploaded, update the profilePic field
      if (req.file) {
