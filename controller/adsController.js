@@ -21,9 +21,14 @@ export const createAd = async (req, res, next) => {
           return res.status(HttpStatus.FORBIDDEN_403).json({ error: 'You do not have permission to create an ad' });
       }
 
+      let imageUrl = req.body.imageUrl
+
+      if(req.file.path){
         // Upload the image to Cloudinary
-    const uploadResult = await cloudinary.uploader.upload(req.file.path);
-    const imageUrl = uploadResult.secure_url;
+        const uploadResult = await cloudinary.uploader.upload(req.file.path);
+        imageUrl = uploadResult.secure_url;
+      }
+
             
 
       // Create new ad
