@@ -1,4 +1,4 @@
-import { Role } from "../models/model.js";
+import { Role, RolePermission } from "../models/model.js";
 
 export const createRoleService = async (body) => {
   return Role.create(body);
@@ -9,12 +9,23 @@ export const updateRoleService = async (id, body) => {
 };
 
 export const getAllRoleService = async () => {
-  return Role.findAll({});
+  return Role.findAll({include: [
+    {
+      model: RolePermission,
+      attributes: { exclude: ["createdAt", "updatedAt"] },
+    },
+  ],});
 };
 
 export const getRoleByIdService = async (id) => {
   return Role.findOne({
-    where: { id: id }
+    where: { id: id },
+    include: [
+      {
+        model: RolePermission,
+        attributes: { exclude: ["createdAt", "updatedAt"] },
+      },
+    ],
       });
 };
 
