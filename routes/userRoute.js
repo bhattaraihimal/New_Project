@@ -4,7 +4,7 @@ import { isAuthorize } from "../middleware/isAuthorize.js";
 
 const userRouter = Router();
 
-userRouter.route("/verify").post(userController.verifyUserToken);
+userRouter.route("/verify").get(userController.verifyUserToken);
 
 userRouter.route("/register").post(userController.registerUser);
 
